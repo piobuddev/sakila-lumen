@@ -1,0 +1,10 @@
+default:
+  suites:
+    default:
+      contexts:
+        - WebApi\Context\Contexts\HttpClientContext: ~
+        - WebApi\Context\Contexts\RepositoryContext: ~
+  extensions:
+      WebApi\ServiceContainer\WebApiExtension:
+          http_client:
+              base_uri: 'http://sakila-lumen.app'
