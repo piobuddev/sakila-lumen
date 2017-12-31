@@ -10,15 +10,60 @@
          stopOnFailure="false"
          syntaxCheck="false">
     <testsuites>
-        <testsuite name="Application Test Suite">
-            <directory suffix="Test.php">./tests</directory>
+        <testsuite name="unit">
+            <directory>tests/Unit</directory>
+        </testsuite>
+        <testsuite name="integration">
+            <directory>tests/Integration</directory>
         </testsuite>
     </testsuites>
+    <listeners>
+        <listener class="\Sakila\Test\RepositoryAwareTestListener">
+            <arguments>
+                <array>
+                    <element key="database">
+                        <array>
+                            <element key="connection">
+                                <array>
+                                    <element key="host">
+                                        <string>localhost</string>
+                                    </element>
+                                    <element key="database">
+                                        <string>sakila_test</string>
+                                    </element>
+                                    <element key="username">
+                                        <string>test</string>
+                                    </element>
+                                    <element key="password">
+                                        <string>test</string>
+                                    </element>
+                                </array>
+                            </element>
+                            <element key="definitions">
+                                <array>
+                                    <element key="path">
+                                        <string>storage/database/factory</string>
+                                    </element>
+                                    <element key="file">
+                                        <string>definitions.php</string>
+                                    </element>
+                                </array>
+                            </element>
+                        </array>
+                    </element>
+                </array>
+            </arguments>
+        </listener>
+    </listeners>
     <filter>
         <whitelist processUncoveredFilesFromWhitelist="true">
             <directory suffix=".php">./app</directory>
         </whitelist>
     </filter>
+    <logging>
+        <log type="coverage-html" target="./../coverage/sakila-lumen" lowUpperBound="35" highLowerBound="70"/>
+        <log type="coverage-text" target="php://stdout" showUncoveredFiles="true"/>
+    </logging>
     <php>
         <env name="APP_ENV" value="testing"/>
         <env name="CACHE_DRIVER" value="array"/>

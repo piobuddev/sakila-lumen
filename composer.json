@@ -37,7 +37,8 @@
   "require-dev": {
     "piobuddev/behat-webapi-extension": "*",
     "phpstan/phpstan": "^0.8.5",
-    "squizlabs/php_codesniffer": "*"
+    "squizlabs/php_codesniffer": "*",
+    "limedeck/phpunit-detailed-printer": "^3.1"
   },
   "autoload-dev": {
     "psr-4": {
@@ -57,6 +58,7 @@
     "test": [
       "@phpstan",
       "@phpcs",
+      "behat --colors",
       "phpunit"
     ]
   },

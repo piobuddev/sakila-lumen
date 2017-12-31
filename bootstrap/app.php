@@ -76,7 +76,7 @@ $app->singleton(
 |
 */
 
-// $app->register(Sakila\Providers\AppServiceProvider::class);
+ $app->register(Sakila\Providers\SakilaServiceProvider::class);
 // $app->register(Sakila\Providers\AuthServiceProvider::class);
 // $app->register(Sakila\Providers\EventServiceProvider::class);
 
