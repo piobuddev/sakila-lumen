@@ -12,15 +12,11 @@
   "repositories": [
     {
       "type": "path",
-      "url": "/home/vagrant/Code/sakila/sakila"
+      "url": "/home/vagrant/sakila/sakila"
     },
     {
       "type": "path",
       "url": "/home/vagrant/Code/behat-webapi-extension"
-    },
-    {
-      "type": "vcs",
-      "url": "https://github.com/piobuddev/sakila-project-installer.git"
     },
     {
       "type": "vcs",
@@ -31,13 +27,9 @@
     "php": "^7.0",
     "laravel/lumen-framework": "5.5.*",
     "vlucas/phpdotenv": "~2.2",
-    "piobuddev/sakila-installer-plugin": "^1.0",
     "piobuddev/sakila": "*"
   },
   "autoload": {
-    "psr-0": {
-      "Sakila\\": "src/"
-    },
     "psr-4": {
       "Sakila\\": "app/"
     }
@@ -59,9 +51,14 @@
     "post-root-package-install": [
       "php -r \"copy('.env.example', '.env');\""
     ],
-    "phpstan": "vendor/bin/phpstan analyse -l 7 src tests",
-    "phpcs": "vendor/bin/phpcs --standard=PSR2 --extensions=php --colors --severity=1 src",
-    "phpcbf": "vendor/bin/phpcbf --standard=PSR2 --extensions=php --colors --severity=1 src"
+    "phpstan": "vendor/bin/phpstan analyse -l 7 app tests",
+    "phpcs": "vendor/bin/phpcs --standard=PSR2 --extensions=php --colors --severity=1 app tests",
+    "phpcbf": "vendor/bin/phpcbf --standard=PSR2 --extensions=php --colors --severity=1 app tests",
+    "test": [
+      "@phpstan",
+      "@phpcs",
+      "phpunit"
+    ]
   },
   "prefer-stable": true,
   "optimize-autoloader": true
