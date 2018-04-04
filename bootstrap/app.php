@@ -1,9 +1,12 @@
 <?php
 
+use Sakila\Providers\CommandBusProvider;
+
 require_once __DIR__.'/../vendor/autoload.php';
 
 try {
-    (new Dotenv\Dotenv(__DIR__.'/../'))->load();
+    $file = isset($_GET['testing']) ? '.env_testing' : '.env';
+    (new Dotenv\Dotenv(__DIR__.'/../', $file))->load();
 } catch (Dotenv\Exception\InvalidPathException $e) {
     //
 }
@@ -77,6 +80,8 @@ $app->singleton(
 */
 
  $app->register(Sakila\Providers\SakilaServiceProvider::class);
+ $app->register(CommandBusProvider::class);
+
 // $app->register(Sakila\Providers\AuthServiceProvider::class);
 // $app->register(Sakila\Providers\EventServiceProvider::class);
 

@@ -3,10 +3,11 @@
 namespace Sakila\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Sakila\Actor\Repository\Database\Illuminate\ActorRepository;
+use Sakila\Domain\Actor\Repository\ActorRepository;
 use Sakila\Domain\Actor\Repository\ActorRepositoryInterface;
 use Sakila\Repository\Database\ConnectionInterface;
 use Sakila\Repository\Database\Illuminate\Connection;
+use Sakila\Validators\ActorValidator;
 
 class SakilaServiceProvider extends ServiceProvider
 {
@@ -19,6 +20,7 @@ class SakilaServiceProvider extends ServiceProvider
     {
         $this->registerDatabaseConnection();
         $this->registerRepositories();
+        $this->registerValidators();
     }
 
     /**
@@ -35,5 +37,13 @@ class SakilaServiceProvider extends ServiceProvider
     private function registerDatabaseConnection(): void
     {
         $this->app->singleton(ConnectionInterface::class, Connection::class);
+    }
+
+    /**
+     * @return void
+     */
+    private function registerValidators()
+    {
+        $this->app->bind(\Sakila\Domain\Actor\Validator\ActorValidator::class, ActorValidator::class);
     }
 }

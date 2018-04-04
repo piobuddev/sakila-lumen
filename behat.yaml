@@ -7,4 +7,4 @@ default:
   extensions:
       WebApi\ServiceContainer\WebApiExtension:
           http_client:
-              base_uri: 'http://sakila-lumen.app'
+              base_uri: 'https://sakila-lumen.local'

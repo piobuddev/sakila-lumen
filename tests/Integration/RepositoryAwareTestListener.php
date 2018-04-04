@@ -88,7 +88,7 @@ class RepositoryAwareTestListener implements TestListener
      */
     private function getConnection(): ConnectionInterface
     {
-        if (null === $this->connection) {
+        if (!isset($this->connection)) {
             $connection = array_pad(array_values($this->config['database']['connection']), 4, null);
             list($host, $database, $username, $password) = $connection;
             $dns     = "mysql:dbname={$database};host={$host}";

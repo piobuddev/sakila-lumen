@@ -3,17 +3,12 @@
 namespace Sakila\Repository\Database\Illuminate;
 
 use Illuminate\Database\DatabaseManager;
-use Sakila\Exceptions\Database\NotFoundException;
 use Sakila\Repository\Database\ConnectionInterface;
-use Sakila\Repository\Database\Table\TableInterface;
+use Sakila\Repository\Database\Illuminate\Query\Builder;
+use Sakila\Repository\Database\Query\BuilderInterface;
 
 class Connection implements ConnectionInterface
 {
-    /**
-     * @var string
-     */
-    protected $primaryKey = 'id';
-
     /**
      * @var \Illuminate\Database\Connection
      */
@@ -28,23 +23,52 @@ class Connection implements ConnectionInterface
     }
 
     /**
-     * @param \Sakila\Repository\Database\Table\TableInterface $table
-     * @param int                                              $entityId
-     *
-     * @return array
-     * @throws \Sakila\Exceptions\Database\NotFoundException
+     * @return \Sakila\Repository\Database\Query\BuilderInterface
      */
-    public function fetch(TableInterface $table, int $entityId): array
+    public function query(): BuilderInterface
     {
-        $result = $this->connection
-            ->table($table->getName())
-            ->where($table->getPrimaryKey(), '=', $entityId)
-            ->first();
+        return new Builder($this->connection);
+    }
 
-        if (null === $result) {
-            throw new NotFoundException('Row (ID:%s) not found in `%s` table', [$entityId, $table->getName()]);
-        }
+    /**
+     * @param string $table
+     * @param array  $data
+     *
+     * @return bool
+     */
+    public function insert(string $table, array $data): bool
+    {
+        return $this->connection->table($table)->insert($data);
+    }
 
-        return (array)$result;
+    /**
+     * @param string $table
+     * @param array  $values
+     * @param array  $where
+     *
+     * @return int
+     */
+    public function update(string $table, array $values, array $where): int
+    {
+        return $this->connection->table($table)->where($where)->update($values);
+    }
+
+    /**
+     * @param string $table
+     * @param array  $where
+     *
+     * @return bool
+     */
+    public function delete(string $table, array $where): bool
+    {
+        return (bool)$this->connection->table($table)->where($where)->delete();
+    }
+
+    /**
+     * @return int
+     */
+    public function lastInsertedId(): int
+    {
+        return (int)$this->connection->getPdo()->lastInsertId();
     }
 }

@@ -14,6 +14,10 @@
 $router->group(['prefix' => 'api'], function () use ($router) {
     $router->group(['namespace' => 'Api'], function () use ($router) {
 
+        $router->get('actors', ['uses' => 'ActorController@index']);
+        $router->post('actors', ['uses' => 'ActorController@store']);
         $router->get('actors/{actorId}', ['uses' => 'ActorController@show']);
+        $router->put('actors/{actorId}', ['uses' => 'ActorController@update']);
+        $router->delete('actors/{actorId}', ['uses' => 'ActorController@destroy']);
     });
 });

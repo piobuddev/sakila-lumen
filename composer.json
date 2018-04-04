@@ -19,8 +19,8 @@
       "url": "/home/vagrant/Code/behat-webapi-extension"
     },
     {
-      "type": "vcs",
-      "url": "https://github.com/piobuddev/repository-tester.git"
+      "type": "path",
+      "url": "/home/vagrant/Code/repository-tester"
     }
   ],
   "require": {
@@ -38,7 +38,8 @@
     "piobuddev/behat-webapi-extension": "*",
     "phpstan/phpstan": "^0.8.5",
     "squizlabs/php_codesniffer": "*",
-    "limedeck/phpunit-detailed-printer": "^3.1"
+    "limedeck/phpunit-detailed-printer": "^3.1",
+    "piobuddev/repository-tester": "*"
   },
   "autoload-dev": {
     "psr-4": {
