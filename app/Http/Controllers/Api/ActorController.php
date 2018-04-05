@@ -4,12 +4,14 @@ namespace Sakila\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Sakila\Command\Bus\CommandBus;
 use Sakila\Domain\Actor\Commands\AddActorCommand;
 use Sakila\Domain\Actor\Commands\UpdateActorCommand;
 use Sakila\Domain\Actor\Repository\ActorRepository;
+use Sakila\Transformer\Transformer;
 
-class ActorController
+class ActorController extends AbstractController
 {
     /**
      * @var \Sakila\Domain\Actor\Repository\ActorRepository
@@ -18,10 +20,13 @@ class ActorController
 
     /**
      * @param \Sakila\Domain\Actor\Repository\ActorRepository $repository
+     * @param \Sakila\Transformer\Transformer                 $transformer
      */
-    public function __construct(ActorRepository $repository)
+    public function __construct(ActorRepository $repository, Transformer $transformer)
     {
-        $this->repository = $repository;
+        $this->repository  = $repository;
+
+        parent::__construct($transformer);
     }
 
     /**
@@ -31,19 +36,22 @@ class ActorController
      */
     public function show(int $actorId): Response
     {
-        $actor = $this->repository->get($actorId);
-
-        return new Response($actor, Response::HTTP_OK);
+        return $this->response($this->repository->get($actorId));
     }
 
     /**
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
-    public function index(): Response
+    public function index(Request $request): Response
     {
-        $actors = $this->repository->all();
+        $page      = (int)$request->query('page', 1);
+        $pageSize  = (int)$request->query('page_size', 15);
+        $items     = $this->repository->all($page, $pageSize);
+        $total     = $this->repository->count();
 
-        return new Response($actors, Response::HTTP_OK);
+        return $this->response(new LengthAwarePaginator($items, $total, $pageSize, $page));
     }
 
     /**
@@ -56,7 +64,7 @@ class ActorController
     {
         $actor = $commandBus->execute(new AddActorCommand($request->post()));
 
-        return new Response($actor, Response::HTTP_CREATED);
+        return $this->response($actor, Response::HTTP_CREATED);
     }
 
     /**
@@ -71,7 +79,7 @@ class ActorController
     {
         $actor = $commandBus->execute(new UpdateActorCommand($actorId, $request->post()));
 
-        return new Response($actor, Response::HTTP_OK);
+        return $this->response($actor);
     }
 
     /**
@@ -83,6 +91,6 @@ class ActorController
     {
         $this->repository->remove($actorId);
 
-        return new Response(null, Response::HTTP_OK);
+        return $this->response();
     }
 }

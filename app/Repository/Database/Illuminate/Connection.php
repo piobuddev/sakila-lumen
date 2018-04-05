@@ -71,4 +71,14 @@ class Connection implements ConnectionInterface
     {
         return (int)$this->connection->getPdo()->lastInsertId();
     }
+
+    /**
+     * @param string $table
+     *
+     * @return int
+     */
+    public function count(string $table): int
+    {
+        return $this->connection->table($table)->count();
+    }
 }

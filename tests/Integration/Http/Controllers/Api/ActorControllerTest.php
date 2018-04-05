@@ -7,6 +7,7 @@ use Sakila\Domain\Actor\Repository\ActorRepository;
 use Sakila\Exceptions\Database\NotFoundException;
 use Sakila\Http\Controllers\Api\ActorController;
 use Sakila\Test\BaseIntegrationTestCase;
+use Sakila\Transformer\Transformer;
 
 class ActorControllerTest extends BaseIntegrationTestCase
 {
@@ -24,7 +25,8 @@ class ActorControllerTest extends BaseIntegrationTestCase
         $this->add('actor', 1, ['actor_id' => self::ACTOR_ID]);
 
         $repository    = $this->app->make(ActorRepository::class);
-        $this->cut     = new ActorController($repository);
+        $transformer   = $this->app->make(Transformer::class);
+        $this->cut     = new ActorController($repository, $transformer);
     }
 
     public function testRequestObjectIsReturnedWhenCallingShowActor()
@@ -47,9 +49,9 @@ class ActorControllerTest extends BaseIntegrationTestCase
         $response = $this->cut->show((int)$actor['actor_id']);
         $content  = json_decode($response->content(), true);
 
-        $this->assertEquals($actor['actor_id'], $content['actorId']);
-        $this->assertEquals($actor['first_name'], $content['firstName']);
-        $this->assertEquals($actor['last_name'], $content['lastName']);
+        $this->assertEquals($actor['actor_id'], $content['data']['actorId']);
+        $this->assertEquals($actor['first_name'], $content['data']['firstName']);
+        $this->assertEquals($actor['last_name'], $content['data']['lastName']);
     }
 
     public function testThrowsHttpNotFoundExceptionWhenActorDoesNotExist()

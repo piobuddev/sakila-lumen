@@ -1,6 +1,8 @@
 <?php
 
 use Sakila\Providers\CommandBusProvider;
+use Sakila\Transformer\FractalTransformerAdapter;
+use Sakila\Transformer\Transformer;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
@@ -48,6 +50,8 @@ $app->singleton(
     Illuminate\Contracts\Console\Kernel::class,
     Sakila\Console\Kernel::class
 );
+
+$app->singleton(Transformer::class, FractalTransformerAdapter::class);
 
 /*
 |--------------------------------------------------------------------------

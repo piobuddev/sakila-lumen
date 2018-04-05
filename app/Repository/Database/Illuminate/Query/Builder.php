@@ -96,4 +96,17 @@ class Builder implements BuilderInterface
     {
         return $this->query->get()->toArray();
     }
+
+    /**
+     * @param int|null $page
+     * @param int      $pageSize
+     *
+     * @return array
+     */
+    public function paginate(?int $page, int $pageSize): array
+    {
+        $page = $page ?: 1;
+
+        return $this->query->skip(($page - 1) * $pageSize)->take($pageSize)->get()->toArray();
+    }
 }
