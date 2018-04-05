@@ -1,6 +1,7 @@
 default:
   suites:
     default:
+      paths: [ vendor/piobuddev/sakila/features ]
       contexts:
         - WebApi\Context\Contexts\HttpClientContext: ~
         - WebApi\Context\Contexts\RepositoryContext: ~
