@@ -3,7 +3,7 @@
 namespace Sakila\Test\Http\Controllers\Api;
 
 use Illuminate\Http\Response;
-use Sakila\Domain\Actor\Repository\ActorRepositoryInterface;
+use Sakila\Domain\Actor\Repository\ActorRepository;
 use Sakila\Exceptions\Database\NotFoundException;
 use Sakila\Http\Controllers\Api\ActorController;
 use Sakila\Test\BaseIntegrationTestCase;
@@ -23,7 +23,7 @@ class ActorControllerTest extends BaseIntegrationTestCase
 
         $this->add('actor', 1, ['actor_id' => self::ACTOR_ID]);
 
-        $repository    = $this->app->make(ActorRepositoryInterface::class);
+        $repository    = $this->app->make(ActorRepository::class);
         $this->cut     = new ActorController($repository);
     }
 

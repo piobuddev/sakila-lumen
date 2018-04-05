@@ -7,19 +7,19 @@ use Illuminate\Http\Response;
 use Sakila\Command\Bus\CommandBus;
 use Sakila\Domain\Actor\Commands\AddActorCommand;
 use Sakila\Domain\Actor\Commands\UpdateActorCommand;
-use Sakila\Domain\Actor\Repository\ActorRepositoryInterface;
+use Sakila\Domain\Actor\Repository\ActorRepository;
 
 class ActorController
 {
     /**
-     * @var \Sakila\Domain\Actor\Repository\ActorRepositoryInterface
+     * @var \Sakila\Domain\Actor\Repository\ActorRepository
      */
     private $repository;
 
     /**
-     * @param \Sakila\Domain\Actor\Repository\ActorRepositoryInterface $repository
+     * @param \Sakila\Domain\Actor\Repository\ActorRepository $repository
      */
-    public function __construct(ActorRepositoryInterface $repository)
+    public function __construct(ActorRepository $repository)
     {
         $this->repository = $repository;
     }

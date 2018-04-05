@@ -7,7 +7,6 @@ use Illuminate\Validation\ValidationException;
 use Illuminate\Auth\Access\AuthorizationException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Laravel\Lumen\Exceptions\Handler as ExceptionHandler;
-use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpKernel\Exception\HttpException;
 
 class Handler extends ExceptionHandler
@@ -34,7 +33,6 @@ class Handler extends ExceptionHandler
      */
     public function report(Exception $e)
     {
-        app(LoggerInterface::class)->error($e->getMessage());
         parent::report($e);
     }
 

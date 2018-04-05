@@ -5,7 +5,7 @@ use Sakila\Providers\CommandBusProvider;
 require_once __DIR__.'/../vendor/autoload.php';
 
 try {
-    $file = isset($_GET['testing']) ? '.env_testing' : '.env';
+    $file = isset($_GET['testing']) || getenv('APP_ENV') === 'testing' ? '.env_testing' : '.env';
     (new Dotenv\Dotenv(__DIR__.'/../', $file))->load();
 } catch (Dotenv\Exception\InvalidPathException $e) {
     //
