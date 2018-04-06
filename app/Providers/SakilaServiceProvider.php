@@ -7,6 +7,8 @@ use Sakila\Domain\Actor\Repository\Database\ActorRepository;
 use Sakila\Domain\Actor\Repository\ActorRepository as ActorRepositoryInterface;
 use Sakila\Repository\Database\ConnectionInterface;
 use Sakila\Repository\Database\Illuminate\Connection;
+use Sakila\Repository\Database\Table\NameResolver;
+use Sakila\Repository\Database\Table\SimpleNameResolver;
 use Sakila\Validators\ActorValidator;
 
 class SakilaServiceProvider extends ServiceProvider
@@ -18,6 +20,7 @@ class SakilaServiceProvider extends ServiceProvider
      */
     public function register()
     {
+        $this->app->bind(NameResolver::class, SimpleNameResolver::class);
         $this->registerDatabaseConnection();
         $this->registerRepositories();
         $this->registerValidators();

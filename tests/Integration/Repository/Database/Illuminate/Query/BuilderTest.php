@@ -32,7 +32,7 @@ class BuilderTest extends BaseIntegrationTestCase
     {
         $column  = 'first_name';
         $results = $this->cut->select([$column])->from(self::TABLE)->get();
-        $result  = (array) array_pop($results);
+        $result  = (array)array_pop($results);
 
         $this->assertCount(1, $result);
         $this->assertArrayHasKey($column, $result);
@@ -40,30 +40,30 @@ class BuilderTest extends BaseIntegrationTestCase
 
     public function testWhere()
     {
-        $actor = array_pop($this->rows);
+        $actor   = array_pop($this->rows);
         $results = $this->cut->from(self::TABLE)->where(['actor_id' => $actor['actor_id']])->get();
-        $result = array_pop($results);
+        $result  = array_pop($results);
 
-        $this->assertEquals($actor['first_name'], $result->first_name);
-        $this->assertEquals($actor['last_name'], $result->last_name);
+        $this->assertEquals($actor['first_name'], $result['first_name']);
+        $this->assertEquals($actor['last_name'], $result['last_name']);
     }
 
     public function testOrderAsc()
     {
         $results = $this->cut->from(self::TABLE)->order(['actor_id', 'ASC'])->get();
 
-        $this->assertEquals(1, $results[0]->actor_id);
-        $this->assertEquals(2, $results[1]->actor_id);
-        $this->assertEquals(3, $results[2]->actor_id);
+        $this->assertEquals(1, $results[0]['actor_id']);
+        $this->assertEquals(2, $results[1]['actor_id']);
+        $this->assertEquals(3, $results[2]['actor_id']);
     }
 
     public function testOrderDesc()
     {
         $results = $this->cut->from(self::TABLE)->order(['actor_id', 'DESC'])->get();
 
-        $this->assertEquals(20, $results[0]->actor_id);
-        $this->assertEquals(19, $results[1]->actor_id);
-        $this->assertEquals(18, $results[2]->actor_id);
+        $this->assertEquals(20, $results[0]['actor_id']);
+        $this->assertEquals(19, $results[1]['actor_id']);
+        $this->assertEquals(18, $results[2]['actor_id']);
     }
 
     public function testLimit()

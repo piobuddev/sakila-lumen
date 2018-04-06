@@ -32,9 +32,9 @@ class Builder implements BuilderInterface
      *
      * @return \Sakila\Repository\Database\Query\BuilderInterface
      */
-    public function select(array $columns): BuilderInterface
+    public function select(array $columns = null): BuilderInterface
     {
-        $this->query->select($columns);
+        $this->query->select($columns ?: '*');
 
         return $this;
     }
@@ -94,7 +94,7 @@ class Builder implements BuilderInterface
      */
     public function get(): array
     {
-        return $this->query->get()->toArray();
+        return $this->toArray($this->query->get()->toArray());
     }
 
     /**
@@ -107,6 +107,23 @@ class Builder implements BuilderInterface
     {
         $page = $page ?: 1;
 
-        return $this->query->skip(($page - 1) * $pageSize)->take($pageSize)->get()->toArray();
+        $query = $this->query->skip(($page - 1) * $pageSize)->take($pageSize);
+
+        return $this->toArray($query->get()->toArray());
+    }
+
+    /**
+     * @param array $data
+     *
+     * @return array
+     */
+    private function toArray(array $data): array
+    {
+        return array_map(
+            function ($row) {
+                return (array) $row;
+            },
+            $data
+        );
     }
 }
