@@ -8,6 +8,9 @@ use Sakila\Command\IlluminateCommandBusAdapter;
 use Sakila\Domain\Actor\Commands\AddActorCommand;
 use Sakila\Domain\Actor\Commands\Handlers\ActorHandler;
 use Sakila\Domain\Actor\Commands\UpdateActorCommand;
+use Sakila\Domain\Category\Commands\AddCategoryCommand;
+use Sakila\Domain\Category\Commands\Handlers\CategoryHandler;
+use Sakila\Domain\Category\Commands\UpdateCategoryCommand;
 
 class CommandBusProvider extends ServiceProvider
 {
@@ -15,8 +18,10 @@ class CommandBusProvider extends ServiceProvider
      * @var array
      */
     private $commandHandlersMap = [
-        AddActorCommand::class    => ActorHandler::class,
-        UpdateActorCommand::class => ActorHandler::class,
+        AddActorCommand::class       => ActorHandler::class,
+        UpdateActorCommand::class    => ActorHandler::class,
+        AddCategoryCommand::class    => CategoryHandler::class,
+        UpdateCategoryCommand::class => CategoryHandler::class,
     ];
 
     public function boot(): void

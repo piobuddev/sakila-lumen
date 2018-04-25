@@ -19,5 +19,12 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('actors/{actorId}', ['uses' => 'ActorController@show']);
         $router->put('actors/{actorId}', ['uses' => 'ActorController@update']);
         $router->delete('actors/{actorId}', ['uses' => 'ActorController@destroy']);
+
+        $router->get('categories', ['uses' => 'CategoryController@index']);
+        $router->post('categories', ['uses' => 'CategoryController@store']);
+        $router->get('categories/{categoryId}', ['uses' => 'CategoryController@show']);
+        $router->put('categories/{categoryId}', ['uses' => 'CategoryController@update']);
+        $router->delete('categories/{categoryId}', ['uses' => 'CategoryController@destroy']);
+
     });
 });

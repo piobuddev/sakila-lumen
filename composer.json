@@ -1,6 +1,6 @@
 {
   "name": "piobuddev/sakila-lumen",
-  "description": "Domain logic for sakila applications",
+  "description": "sakila applications build with lumen micro framework",
   "type": "project",
   "authors": [
     {
@@ -24,11 +24,11 @@
     }
   ],
   "require": {
-    "php": "^7.0",
-    "laravel/lumen-framework": "5.5.*",
-    "vlucas/phpdotenv": "~2.2",
+    "php": "^7.1",
     "piobuddev/sakila": "*",
-    "league/fractal": "^0.17.0"
+    "league/fractal": "^0.17.0",
+    "laravel/lumen-framework": "5.5.*",
+    "vlucas/phpdotenv": "~2.2"
   },
   "autoload": {
     "psr-4": {
@@ -39,8 +39,8 @@
     "piobuddev/behat-webapi-extension": "*",
     "phpstan/phpstan": "^0.8.5",
     "squizlabs/php_codesniffer": "*",
-    "limedeck/phpunit-detailed-printer": "^3.1",
-    "piobuddev/repository-tester": "*"
+    "piobuddev/repository-tester": "*",
+    "limedeck/phpunit-detailed-printer": "^3.1"
   },
   "autoload-dev": {
     "psr-4": {
