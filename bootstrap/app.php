@@ -1,5 +1,6 @@
 <?php
 
+use Laravel\Lumen\Routing\Router;
 use Sakila\Providers\CommandBusProvider;
 use Sakila\Transformer\FractalTransformerAdapter;
 use Sakila\Transformer\Transformer;
@@ -102,7 +103,7 @@ $app->singleton(Transformer::class, FractalTransformerAdapter::class);
 
 $app->router->group([
     'namespace' => 'Sakila\Http\Controllers',
-], function ($router) {
+], function (Router $router) {
     require __DIR__ . '/../routes/api.php';
 });
 

@@ -7,7 +7,6 @@ use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
-use League\Fractal\Serializer\ArraySerializer;
 use Sakila\Entity\EntityInterface;
 
 class FractalTransformerAdapter implements Transformer

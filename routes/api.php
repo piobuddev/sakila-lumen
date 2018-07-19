@@ -11,6 +11,7 @@
 |
 */
 
+/** @var $router \Laravel\Lumen\Routing\Router */
 $router->group(['prefix' => 'api'], function () use ($router) {
     $router->group(['namespace' => 'Api'], function () use ($router) {
 
@@ -26,5 +27,10 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->put('categories/{categoryId}', ['uses' => 'CategoryController@update']);
         $router->delete('categories/{categoryId}', ['uses' => 'CategoryController@destroy']);
 
+        $router->get('countries', ['uses' => 'CountryController@index']);
+        $router->post('countries', ['uses' => 'CountryController@store']);
+        $router->get('countries/{countryId}', ['uses' => 'CountryController@show']);
+        $router->put('countries/{countryId}', ['uses' => 'CountryController@update']);
+        $router->delete('countries/{countryId}', ['uses' => 'CountryController@destroy']);
     });
 });
