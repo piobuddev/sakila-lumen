@@ -32,5 +32,11 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('countries/{countryId}', ['uses' => 'CountryController@show']);
         $router->put('countries/{countryId}', ['uses' => 'CountryController@update']);
         $router->delete('countries/{countryId}', ['uses' => 'CountryController@destroy']);
+
+        $router->get('languages', ['uses' => 'LanguageController@index']);
+        $router->post('languages', ['uses' => 'LanguageController@store']);
+        $router->get('languages/{languageId}', ['uses' => 'LanguageController@show']);
+        $router->put('languages/{languageId}', ['uses' => 'LanguageController@update']);
+        $router->delete('languages/{languageId}', ['uses' => 'LanguageController@destroy']);
     });
 });

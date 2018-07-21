@@ -14,6 +14,9 @@ use Sakila\Domain\Category\Commands\UpdateCategoryCommand;
 use Sakila\Domain\Country\Commands\AddCountryCommand;
 use Sakila\Domain\Country\Commands\Handlers\CountryHandler;
 use Sakila\Domain\Country\Commands\UpdateCountryCommand;
+use Sakila\Domain\Language\Commands\AddLanguageCommand;
+use Sakila\Domain\Language\Commands\Handlers\LanguageHandler;
+use Sakila\Domain\Language\Commands\UpdateLanguageCommand;
 
 class CommandBusProvider extends ServiceProvider
 {
@@ -27,6 +30,8 @@ class CommandBusProvider extends ServiceProvider
         UpdateCategoryCommand::class => CategoryHandler::class,
         AddCountryCommand::class     => CountryHandler::class,
         UpdateCountryCommand::class  => CountryHandler::class,
+        AddLanguageCommand::class    => LanguageHandler::class,
+        UpdateLanguageCommand::class => LanguageHandler::class,
     ];
 
     public function boot(): void
