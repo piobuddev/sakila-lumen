@@ -9,6 +9,7 @@ use Sakila\Command\Bus\CommandBus;
 use Sakila\Domain\Country\Commands\AddCountryCommand;
 use Sakila\Domain\Country\Commands\UpdateCountryCommand;
 use Sakila\Domain\Country\Repository\CountryRepository;
+use Sakila\Transformer\CountryTransformer;
 use Sakila\Transformer\Transformer;
 
 class CountryController extends AbstractController
@@ -36,7 +37,9 @@ class CountryController extends AbstractController
      */
     public function show(int $countryId): Response
     {
-        return $this->response($this->repository->get($countryId));
+        $country = $this->repository->get($countryId);
+
+        return $this->response($this->item($country, CountryTransformer::class));
     }
 
     /**
@@ -46,12 +49,13 @@ class CountryController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $page     = (int)$request->query('page', 1);
-        $pageSize = (int)$request->query('page_size', 15);
-        $items    = $this->repository->all($page, $pageSize);
-        $total    = $this->repository->count();
+        $page      = (int)$request->query('page', 1);
+        $pageSize  = (int)$request->query('page_size', 15);
+        $items     = $this->repository->all($page, $pageSize);
+        $total     = $this->repository->count();
+        $countries = new LengthAwarePaginator($items, $total, $pageSize, $page);
 
-        return $this->response(new LengthAwarePaginator($items, $total, $pageSize, $page));
+        return $this->response($this->collection($countries, CountryTransformer::class));
     }
 
     /**
@@ -64,7 +68,7 @@ class CountryController extends AbstractController
     {
         $country = $commandBus->execute(new AddCountryCommand($request->post()));
 
-        return $this->response($country, Response::HTTP_CREATED);
+        return $this->response($this->item($country, CountryTransformer::class), Response::HTTP_CREATED);
     }
 
     /**
@@ -79,7 +83,7 @@ class CountryController extends AbstractController
     {
         $country = $commandBus->execute(new UpdateCountryCommand($countryId, $request->post()));
 
-        return $this->response($country);
+        return $this->response($this->item($country, CountryTransformer::class));
     }
 
     /**

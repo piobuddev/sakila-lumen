@@ -9,6 +9,7 @@ use Sakila\Command\Bus\CommandBus;
 use Sakila\Domain\Category\Commands\AddCategoryCommand;
 use Sakila\Domain\Category\Commands\UpdateCategoryCommand;
 use Sakila\Domain\Category\Repository\CategoryRepository;
+use Sakila\Transformer\CategoryTransformer;
 use Sakila\Transformer\Transformer;
 
 class CategoryController extends AbstractController
@@ -36,7 +37,9 @@ class CategoryController extends AbstractController
      */
     public function show(int $categoryId): Response
     {
-        return $this->response($this->repository->get($categoryId));
+        $category = $this->repository->get($categoryId);
+
+        return $this->response($this->item($category, CategoryTransformer::class));
     }
 
     /**
@@ -46,12 +49,13 @@ class CategoryController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $page     = (int)$request->query('page', 1);
-        $pageSize = (int)$request->query('page_size', 15);
-        $items    = $this->repository->all($page, $pageSize);
-        $total    = $this->repository->count();
+        $page       = (int)$request->query('page', 1);
+        $pageSize   = (int)$request->query('page_size', 15);
+        $items      = $this->repository->all($page, $pageSize);
+        $total      = $this->repository->count();
+        $categories = new LengthAwarePaginator($items, $total, $pageSize, $page);
 
-        return $this->response(new LengthAwarePaginator($items, $total, $pageSize, $page));
+        return $this->response($this->collection($categories, CategoryTransformer::class));
     }
 
     /**
@@ -64,7 +68,7 @@ class CategoryController extends AbstractController
     {
         $category = $commandBus->execute(new AddCategoryCommand($request->post()));
 
-        return $this->response($category, Response::HTTP_CREATED);
+        return $this->response($this->item($category, CategoryTransformer::class), Response::HTTP_CREATED);
     }
 
     /**
@@ -79,7 +83,7 @@ class CategoryController extends AbstractController
     {
         $category = $commandBus->execute(new UpdateCategoryCommand($categoryId, $request->post()));
 
-        return $this->response($category);
+        return $this->response($this->item($category, CategoryTransformer::class));
     }
 
     /**

@@ -65,9 +65,9 @@ $app->singleton(Transformer::class, FractalTransformerAdapter::class);
 |
 */
 
-// $app->middleware([
-//    Sakila\Http\Middleware\ExampleMiddleware::class
-// ]);
+ $app->middleware([
+    Sakila\Http\Middleware\FractalMiddleware::class,
+ ]);
 
 // $app->routeMiddleware([
 //     'auth' => Sakila\Http\Middleware\Authenticate::class,

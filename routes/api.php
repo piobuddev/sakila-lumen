@@ -38,5 +38,11 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('languages/{languageId}', ['uses' => 'LanguageController@show']);
         $router->put('languages/{languageId}', ['uses' => 'LanguageController@update']);
         $router->delete('languages/{languageId}', ['uses' => 'LanguageController@destroy']);
+
+        $router->get('cities', ['uses' => 'CityController@index']);
+        $router->post('cities', ['uses' => 'CityController@store']);
+        $router->get('cities/{cityId}', ['uses' => 'CityController@show']);
+        $router->put('cities/{cityId}', ['uses' => 'CityController@update']);
+        $router->delete('cities/{cityId}', ['uses' => 'CityController@destroy']);
     });
 });

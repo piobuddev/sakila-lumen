@@ -9,6 +9,7 @@ use Sakila\Command\Bus\CommandBus;
 use Sakila\Domain\Actor\Commands\AddActorCommand;
 use Sakila\Domain\Actor\Commands\UpdateActorCommand;
 use Sakila\Domain\Actor\Repository\ActorRepository;
+use Sakila\Transformer\ActorTransformer;
 use Sakila\Transformer\Transformer;
 
 class ActorController extends AbstractController
@@ -24,7 +25,7 @@ class ActorController extends AbstractController
      */
     public function __construct(ActorRepository $repository, Transformer $transformer)
     {
-        $this->repository  = $repository;
+        $this->repository = $repository;
 
         parent::__construct($transformer);
     }
@@ -36,7 +37,9 @@ class ActorController extends AbstractController
      */
     public function show(int $actorId): Response
     {
-        return $this->response($this->repository->get($actorId));
+        $actor = $this->repository->get($actorId);
+
+        return $this->response($this->item($actor, ActorTransformer::class));
     }
 
     /**
@@ -46,12 +49,13 @@ class ActorController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $page      = (int)$request->query('page', 1);
-        $pageSize  = (int)$request->query('page_size', 15);
-        $items     = $this->repository->all($page, $pageSize);
-        $total     = $this->repository->count();
+        $page     = (int)$request->query('page', 1);
+        $pageSize = (int)$request->query('page_size', 15);
+        $items    = $this->repository->all($page, $pageSize);
+        $total    = $this->repository->count();
+        $actors   = new LengthAwarePaginator($items, $total, $pageSize, $page);
 
-        return $this->response(new LengthAwarePaginator($items, $total, $pageSize, $page));
+        return $this->response($this->collection($actors, ActorTransformer::class));
     }
 
     /**
@@ -64,7 +68,7 @@ class ActorController extends AbstractController
     {
         $actor = $commandBus->execute(new AddActorCommand($request->post()));
 
-        return $this->response($actor, Response::HTTP_CREATED);
+        return $this->response($this->item($actor, ActorTransformer::class), Response::HTTP_CREATED);
     }
 
     /**
@@ -79,7 +83,7 @@ class ActorController extends AbstractController
     {
         $actor = $commandBus->execute(new UpdateActorCommand($actorId, $request->post()));
 
-        return $this->response($actor);
+        return $this->response($this->item($actor, ActorTransformer::class));
     }
 
     /**

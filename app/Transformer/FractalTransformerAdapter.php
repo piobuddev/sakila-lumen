@@ -3,10 +3,12 @@
 namespace Sakila\Transformer;
 
 use Illuminate\Pagination\LengthAwarePaginator;
+use Laravel\Lumen\Application;
 use League\Fractal\Manager;
 use League\Fractal\Pagination\IlluminatePaginatorAdapter;
 use League\Fractal\Resource\Collection;
 use League\Fractal\Resource\Item;
+use League\Fractal\Serializer\ArraySerializer;
 use Sakila\Entity\EntityInterface;
 
 class FractalTransformerAdapter implements Transformer
@@ -17,32 +19,72 @@ class FractalTransformerAdapter implements Transformer
     private $manager;
 
     /**
-     * @param \League\Fractal\Manager $manager
+     * @var \Laravel\Lumen\Application
      */
-    public function __construct(Manager $manager)
+    private $application;
+
+    /**
+     * @param \League\Fractal\Manager    $manager
+     * @param \Laravel\Lumen\Application $application
+     */
+    public function __construct(Manager $manager, Application $application)
     {
-        $this->manager = $manager;
+        $manager->setSerializer(new ArraySerializer());
+
+        $this->manager     = $manager;
+        $this->application = $application;
     }
 
     /**
-     * @param mixed $entity
+     * @param mixed       $data
+     * @param string|null $transformer
      *
      * @return array
      */
-    public function transform($entity): array
+    public function item($data, string $transformer = null): array
     {
-        $simpleTransformer = function (EntityInterface $data) {
-            return $data->jsonSerialize();
-        };
+        $item = new Item($data, $this->resolveTransformer($transformer));
 
-        $resourceClass = $entity instanceof EntityInterface ? Item::class : Collection::class;
-        /** @var \League\Fractal\Resource\ResourceAbstract $resource */
-        $resource      = new $resourceClass($entity, $simpleTransformer);
+        return $this->manager->createData($item)->toArray();
+    }
 
-        if ($resource instanceof Collection && $entity instanceof LengthAwarePaginator) {
-            $resource->setPaginator(new IlluminatePaginatorAdapter($entity));
+    /**
+     * @param mixed  $data
+     * @param string $transformer
+     *
+     * @return array
+     */
+    public function collection($data, string $transformer = null): array
+    {
+        $collection = new Collection($data, $this->resolveTransformer($transformer));
+        if ($data instanceof LengthAwarePaginator) {
+            $collection->setPaginator(new IlluminatePaginatorAdapter($data));
         }
 
-        return $this->manager->createData($resource)->toArray();
+        return $this->manager->createData($collection)->toArray();
+    }
+
+    /**
+     * @param string|null $transformer
+     *
+     * @return \Closure|mixed
+     */
+    private function resolveTransformer(string $transformer = null)
+    {
+        if (null === $transformer) {
+            return $this->getSimpleTransformer();
+        }
+
+        return $this->application->make($transformer);
+    }
+
+    /**
+     * @return \Closure
+     */
+    private function getSimpleTransformer(): \Closure
+    {
+        return function (EntityInterface $entity) {
+            return $entity->jsonSerialize();
+        };
     }
 }

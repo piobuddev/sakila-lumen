@@ -1,18 +1,23 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace Sakila\Providers;
 
 use Illuminate\Support\ServiceProvider;
+use League\Fractal\Manager;
 use Sakila\Domain\Actor\Repository\Database\ActorRepository;
 use Sakila\Domain\Category\Repository\Database\CategoryRepository;
+use Sakila\Domain\City\Repository\Database\CityRepository;
 use Sakila\Domain\Country\Repository\Database\CountryRepository;
 use Sakila\Domain\Language\Repository\Database\LanguageRepository;
+use Sakila\Entity\FactoryInterface;
+use Sakila\Entity\IlluminateFactoryAdapter;
 use Sakila\Repository\Database\ConnectionInterface;
 use Sakila\Repository\Database\Illuminate\Connection;
 use Sakila\Repository\Database\Table\NameResolver;
 use Sakila\Repository\Database\Table\SimpleNameResolver;
 use Sakila\Validators\ActorValidator;
 use Sakila\Validators\CategoryValidator;
+use Sakila\Validators\CityValidator;
 use Sakila\Validators\CountryValidator;
 use Sakila\Validators\LanguageValidator;
 
@@ -26,6 +31,11 @@ class SakilaServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->bind(NameResolver::class, SimpleNameResolver::class);
+        $this->app->bind(FactoryInterface::class, IlluminateFactoryAdapter::class);
+        $this->app->singleton(Manager::class, function () {
+            return new Manager();
+        });
+
         $this->registerDatabaseConnection();
         $this->registerRepositories();
         $this->registerValidators();
@@ -40,6 +50,7 @@ class SakilaServiceProvider extends ServiceProvider
         $this->app->bind(\Sakila\Domain\Category\Repository\CategoryRepository::class, CategoryRepository::class);
         $this->app->bind(\Sakila\Domain\Country\Repository\CountryRepository::class, CountryRepository::class);
         $this->app->bind(\Sakila\Domain\Language\Repository\LanguageRepository::class, LanguageRepository::class);
+        $this->app->bind(\Sakila\Domain\City\Repository\CityRepository::class, CityRepository::class);
     }
 
     /**
@@ -59,5 +70,6 @@ class SakilaServiceProvider extends ServiceProvider
         $this->app->bind(\Sakila\Domain\Category\Validator\CategoryValidator::class, CategoryValidator::class);
         $this->app->bind(\Sakila\Domain\Country\Validator\CountryValidator::class, CountryValidator::class);
         $this->app->bind(\Sakila\Domain\Language\Validator\LanguageValidator::class, LanguageValidator::class);
+        $this->app->bind(\Sakila\Domain\City\Validator\CityValidator::class, CityValidator::class);
     }
 }
