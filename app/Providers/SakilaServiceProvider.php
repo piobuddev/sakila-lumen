@@ -5,6 +5,7 @@ namespace Sakila\Providers;
 use Illuminate\Support\ServiceProvider;
 use League\Fractal\Manager;
 use Sakila\Domain\Actor\Repository\Database\ActorRepository;
+use Sakila\Domain\Address\Repository\Database\AddressRepository;
 use Sakila\Domain\Category\Repository\Database\CategoryRepository;
 use Sakila\Domain\City\Repository\Database\CityRepository;
 use Sakila\Domain\Country\Repository\Database\CountryRepository;
@@ -16,6 +17,7 @@ use Sakila\Repository\Database\Illuminate\Connection;
 use Sakila\Repository\Database\Table\NameResolver;
 use Sakila\Repository\Database\Table\SimpleNameResolver;
 use Sakila\Validators\ActorValidator;
+use Sakila\Validators\AddressValidator;
 use Sakila\Validators\CategoryValidator;
 use Sakila\Validators\CityValidator;
 use Sakila\Validators\CountryValidator;
@@ -51,6 +53,7 @@ class SakilaServiceProvider extends ServiceProvider
         $this->app->bind(\Sakila\Domain\Country\Repository\CountryRepository::class, CountryRepository::class);
         $this->app->bind(\Sakila\Domain\Language\Repository\LanguageRepository::class, LanguageRepository::class);
         $this->app->bind(\Sakila\Domain\City\Repository\CityRepository::class, CityRepository::class);
+        $this->app->bind(\Sakila\Domain\Address\Repository\AddressRepository::class, AddressRepository::class);
     }
 
     /**
@@ -71,5 +74,6 @@ class SakilaServiceProvider extends ServiceProvider
         $this->app->bind(\Sakila\Domain\Country\Validator\CountryValidator::class, CountryValidator::class);
         $this->app->bind(\Sakila\Domain\Language\Validator\LanguageValidator::class, LanguageValidator::class);
         $this->app->bind(\Sakila\Domain\City\Validator\CityValidator::class, CityValidator::class);
+        $this->app->bind(\Sakila\Domain\Address\Validator\AddressValidator::class, AddressValidator::class);
     }
 }
