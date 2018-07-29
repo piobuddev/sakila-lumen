@@ -81,4 +81,16 @@ class Connection implements ConnectionInterface
     {
         return $this->connection->table($table)->count();
     }
+
+    /**
+     * @param \Closure $callback
+     *
+     * @return mixed
+     * @throws \Exception
+     * @throws \Throwable
+     */
+    public function transaction(\Closure $callback)
+    {
+        return $this->connection->transaction($callback);
+    }
 }

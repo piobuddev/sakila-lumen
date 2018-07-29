@@ -20,7 +20,7 @@
     },
     {
       "type": "path",
-      "url": "/home/vagrant/Code/repository-tester"
+      "url": "/home/vagrant/sakila/repository-tester"
     }
   ],
   "require": {

@@ -45,10 +45,16 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->put('cities/{cityId}', ['uses' => 'CityController@update']);
         $router->delete('cities/{cityId}', ['uses' => 'CityController@destroy']);
 
-        $router->get('addresses', ['uses' => 'addressController@index']);
-        $router->post('addresses', ['uses' => 'addressController@store']);
-        $router->get('addresses/{addressId}', ['uses' => 'addressController@show']);
-        $router->put('addresses/{addressId}', ['uses' => 'addressController@update']);
-        $router->delete('addresses/{addressId}', ['uses' => 'addressController@destroy']);
+        $router->get('addresses', ['uses' => 'AddressController@index']);
+        $router->post('addresses', ['uses' => 'AddressController@store']);
+        $router->get('addresses/{addressId}', ['uses' => 'AddressController@show']);
+        $router->put('addresses/{addressId}', ['uses' => 'AddressController@update']);
+        $router->delete('addresses/{addressId}', ['uses' => 'AddressController@destroy']);
+
+        $router->get('stores', ['uses' => 'StoreController@index']);
+        $router->post('stores', ['uses' => 'StoreController@store']);
+        $router->get('stores/{storeId}', ['uses' => 'StoreController@show']);
+        $router->put('stores/{storeId}', ['uses' => 'StoreController@update']);
+        $router->delete('stores/{storeId}', ['uses' => 'StoreController@destroy']);
     });
 });

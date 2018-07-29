@@ -5,7 +5,7 @@ namespace Sakila\Models;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
 /**
- * @property \Sakila\Models\CountryModel $country
+ * @property \Sakila\Models\CityModel $city
  */
 class AddressModel extends AbstractModel
 {

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "e7c5c452fdfd6794aeb6e6807146415f",
+    "content-hash": "c13ec195f1612235775185e1d2b43b7f",
     "packages": [
         {
             "name": "doctrine/inflector",
@@ -4477,11 +4477,11 @@
         },
         {
             "name": "piobuddev/repository-tester",
-            "version": "dev-master",
+            "version": "9999999-dev",
             "dist": {
                 "type": "path",
-                "url": "/home/vagrant/Code/repository-tester",
-                "reference": "6bd267801b68909552f530731c8de070e9085642",
+                "url": "/home/vagrant/sakila/repository-tester",
+                "reference": "c9cbb9ae3bab5837d76e4142106331d68e6b983e",
                 "shasum": null
             },
             "require": {
@@ -4511,13 +4511,18 @@
             },
             "scripts": {
                 "phpstan": [
-                    "vendor/bin/phpstan analyse -l 7 src tests"
+                    "vendor/bin/phpstan analyse -l 7 src tests -c phpstan.neon"
                 ],
                 "phpcs": [
                     "vendor/bin/phpcs --standard=PSR2 --extensions=php --colors --severity=1 src"
                 ],
                 "phpcbf": [
                     "vendor/bin/phpcbf --standard=PSR2 --extensions=php --colors --severity=1 src"
+                ],
+                "test": [
+                    "@phpstan",
+                    "@phpcs",
+                    "phpunit"
                 ]
             },
             "authors": [
@@ -5639,7 +5644,7 @@
     "prefer-stable": true,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.0"
+        "php": "^7.1"
     },
     "platform-dev": []
 }

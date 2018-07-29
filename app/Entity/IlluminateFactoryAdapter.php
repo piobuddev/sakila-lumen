@@ -17,12 +17,12 @@ class IlluminateFactoryAdapter implements FactoryInterface
      */
     public function create(string $resource, array $arguments = []): EntityInterface
     {
-        $model = $this->getModel($resource);
+        $model = $this->getModel($resource)->forceFill($arguments);
         if (!$model instanceof EntityInterface) {
             throw new UnexpectedValueException();
         }
 
-        return $model->forceFill($arguments);
+        return $model;
     }
 
     /**
