@@ -9,6 +9,7 @@ use Sakila\Domain\Address\Repository\Database\AddressRepository;
 use Sakila\Domain\Category\Repository\Database\CategoryRepository;
 use Sakila\Domain\City\Repository\Database\CityRepository;
 use Sakila\Domain\Country\Repository\Database\CountryRepository;
+use Sakila\Domain\Customer\Repository\Database\CustomerRepository;
 use Sakila\Domain\Language\Repository\Database\LanguageRepository;
 use Sakila\Domain\Staff\Repository\Database\StaffRepository;
 use Sakila\Domain\Store\Repository\Database\StoreRepository;
@@ -23,6 +24,7 @@ use Sakila\Validators\AddressValidator;
 use Sakila\Validators\CategoryValidator;
 use Sakila\Validators\CityValidator;
 use Sakila\Validators\CountryValidator;
+use Sakila\Validators\CustomerValidator;
 use Sakila\Validators\LanguageValidator;
 use Sakila\Validators\StaffValidator;
 use Sakila\Validators\StoreValidator;
@@ -60,6 +62,7 @@ class SakilaServiceProvider extends ServiceProvider
         $this->app->bind(\Sakila\Domain\Address\Repository\AddressRepository::class, AddressRepository::class);
         $this->app->bind(\Sakila\Domain\Store\Repository\StoreRepository::class, StoreRepository::class);
         $this->app->bind(\Sakila\Domain\Staff\Repository\StaffRepository::class, StaffRepository::class);
+        $this->app->bind(\Sakila\Domain\Customer\Repository\CustomerRepository::class, CustomerRepository::class);
     }
 
     /**
@@ -83,5 +86,6 @@ class SakilaServiceProvider extends ServiceProvider
         $this->app->bind(\Sakila\Domain\Address\Validator\AddressValidator::class, AddressValidator::class);
         $this->app->bind(\Sakila\Domain\Store\Validator\StoreValidator::class, StoreValidator::class);
         $this->app->bind(\Sakila\Domain\Staff\Validator\StaffValidator::class, StaffValidator::class);
+        $this->app->bind(\Sakila\Domain\Customer\Validator\CustomerValidator::class, CustomerValidator::class);
     }
 }

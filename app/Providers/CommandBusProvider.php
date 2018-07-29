@@ -20,6 +20,9 @@ use Sakila\Domain\City\Commands\UpdateCityCommand;
 use Sakila\Domain\Country\Commands\AddCountryCommand;
 use Sakila\Domain\Country\Commands\Handlers\CountryHandler;
 use Sakila\Domain\Country\Commands\UpdateCountryCommand;
+use Sakila\Domain\Customer\Commands\AddCustomerCommand;
+use Sakila\Domain\Customer\Commands\Handlers\CustomerHandler;
+use Sakila\Domain\Customer\Commands\UpdateCustomerCommand;
 use Sakila\Domain\Language\Commands\AddLanguageCommand;
 use Sakila\Domain\Language\Commands\Handlers\LanguageHandler;
 use Sakila\Domain\Language\Commands\UpdateLanguageCommand;
@@ -52,6 +55,8 @@ class CommandBusProvider extends ServiceProvider
         UpdateStoreCommand::class    => StoreHandler::class,
         AddStaffCommand::class       => StaffHandler::class,
         UpdateStaffCommand::class    => StaffHandler::class,
+        AddCustomerCommand::class    => CustomerHandler::class,
+        UpdateCustomerCommand::class => CustomerHandler::class,
     ];
 
     public function boot(): void

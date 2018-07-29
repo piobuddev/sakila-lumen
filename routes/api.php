@@ -58,9 +58,15 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->delete('stores/{storeId}', ['uses' => 'StoreController@destroy']);
 
         $router->get('staff', ['uses' => 'StaffController@index']);
-        $router->post('staff', ['uses' => 'StaffController@staff']);
+        $router->post('staff', ['uses' => 'StaffController@store']);
         $router->get('staff/{staffId}', ['uses' => 'StaffController@show']);
         $router->put('staff/{staffId}', ['uses' => 'StaffController@update']);
         $router->delete('staff/{staffId}', ['uses' => 'StaffController@destroy']);
+
+        $router->get('customers', ['uses' => 'CustomerController@index']);
+        $router->post('customers', ['uses' => 'CustomerController@store']);
+        $router->get('customers/{customerId}', ['uses' => 'CustomerController@show']);
+        $router->put('customers/{customerId}', ['uses' => 'CustomerController@update']);
+        $router->delete('customers/{customerId}', ['uses' => 'CustomerController@destroy']);
     });
 });
