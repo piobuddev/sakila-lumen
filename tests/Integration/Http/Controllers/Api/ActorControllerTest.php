@@ -49,9 +49,9 @@ class ActorControllerTest extends BaseIntegrationTestCase
         $response = $this->cut->show((int)$actor['actor_id']);
         $content  = json_decode($response->content(), true);
 
-        $this->assertEquals($actor['actor_id'], $content['data']['actorId']);
-        $this->assertEquals($actor['first_name'], $content['data']['firstName']);
-        $this->assertEquals($actor['last_name'], $content['data']['lastName']);
+        $this->assertEquals($actor['actor_id'], $content['actorId']);
+        $this->assertEquals($actor['first_name'], $content['firstName']);
+        $this->assertEquals($actor['last_name'], $content['lastName']);
     }
 
     public function testThrowsHttpNotFoundExceptionWhenActorDoesNotExist()
