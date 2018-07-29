@@ -68,5 +68,11 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('customers/{customerId}', ['uses' => 'CustomerController@show']);
         $router->put('customers/{customerId}', ['uses' => 'CustomerController@update']);
         $router->delete('customers/{customerId}', ['uses' => 'CustomerController@destroy']);
+
+        $router->get('films', ['uses' => 'FilmController@index']);
+        $router->post('films', ['uses' => 'FilmController@store']);
+        $router->get('films/{filmId}', ['uses' => 'FilmController@show']);
+        $router->put('films/{filmId}', ['uses' => 'FilmController@update']);
+        $router->delete('films/{filmId}', ['uses' => 'FilmController@destroy']);
     });
 });

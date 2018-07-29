@@ -23,6 +23,9 @@ use Sakila\Domain\Country\Commands\UpdateCountryCommand;
 use Sakila\Domain\Customer\Commands\AddCustomerCommand;
 use Sakila\Domain\Customer\Commands\Handlers\CustomerHandler;
 use Sakila\Domain\Customer\Commands\UpdateCustomerCommand;
+use Sakila\Domain\Film\Commands\AddFilmCommand;
+use Sakila\Domain\Film\Commands\Handlers\FilmHandler;
+use Sakila\Domain\Film\Commands\UpdateFilmCommand;
 use Sakila\Domain\Language\Commands\AddLanguageCommand;
 use Sakila\Domain\Language\Commands\Handlers\LanguageHandler;
 use Sakila\Domain\Language\Commands\UpdateLanguageCommand;
@@ -57,6 +60,8 @@ class CommandBusProvider extends ServiceProvider
         UpdateStaffCommand::class    => StaffHandler::class,
         AddCustomerCommand::class    => CustomerHandler::class,
         UpdateCustomerCommand::class => CustomerHandler::class,
+        AddFilmCommand::class        => FilmHandler::class,
+        UpdateFilmCommand::class     => FilmHandler::class,
     ];
 
     public function boot(): void
