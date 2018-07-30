@@ -80,5 +80,11 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('inventory/{inventoryId}', ['uses' => 'InventoryController@show']);
         $router->put('inventory/{inventoryId}', ['uses' => 'InventoryController@update']);
         $router->delete('inventory/{inventoryId}', ['uses' => 'InventoryController@destroy']);
+
+        $router->get('rentals', ['uses' => 'RentalController@index']);
+        $router->post('rentals', ['uses' => 'RentalController@store']);
+        $router->get('rentals/{rentalId}', ['uses' => 'RentalController@show']);
+        $router->put('rentals/{rentalId}', ['uses' => 'RentalController@update']);
+        $router->delete('rentals/{rentalId}', ['uses' => 'RentalController@destroy']);
     });
 });
