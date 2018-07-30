@@ -74,5 +74,11 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('films/{filmId}', ['uses' => 'FilmController@show']);
         $router->put('films/{filmId}', ['uses' => 'FilmController@update']);
         $router->delete('films/{filmId}', ['uses' => 'FilmController@destroy']);
+
+        $router->get('inventory', ['uses' => 'InventoryController@index']);
+        $router->post('inventory', ['uses' => 'InventoryController@store']);
+        $router->get('inventory/{inventoryId}', ['uses' => 'InventoryController@show']);
+        $router->put('inventory/{inventoryId}', ['uses' => 'InventoryController@update']);
+        $router->delete('inventory/{inventoryId}', ['uses' => 'InventoryController@destroy']);
     });
 });

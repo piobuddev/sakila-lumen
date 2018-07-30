@@ -26,6 +26,9 @@ use Sakila\Domain\Customer\Commands\UpdateCustomerCommand;
 use Sakila\Domain\Film\Commands\AddFilmCommand;
 use Sakila\Domain\Film\Commands\Handlers\FilmHandler;
 use Sakila\Domain\Film\Commands\UpdateFilmCommand;
+use Sakila\Domain\Inventory\Commands\AddInventoryCommand;
+use Sakila\Domain\Inventory\Commands\Handlers\InventoryHandler;
+use Sakila\Domain\Inventory\Commands\UpdateInventoryCommand;
 use Sakila\Domain\Language\Commands\AddLanguageCommand;
 use Sakila\Domain\Language\Commands\Handlers\LanguageHandler;
 use Sakila\Domain\Language\Commands\UpdateLanguageCommand;
@@ -42,26 +45,28 @@ class CommandBusProvider extends ServiceProvider
      * @var array
      */
     private $commandHandlersMap = [
-        AddActorCommand::class       => ActorHandler::class,
-        UpdateActorCommand::class    => ActorHandler::class,
-        AddCategoryCommand::class    => CategoryHandler::class,
-        UpdateCategoryCommand::class => CategoryHandler::class,
-        AddCountryCommand::class     => CountryHandler::class,
-        UpdateCountryCommand::class  => CountryHandler::class,
-        AddLanguageCommand::class    => LanguageHandler::class,
-        UpdateLanguageCommand::class => LanguageHandler::class,
-        AddCityCommand::class        => CityHandler::class,
-        UpdateCityCommand::class     => CityHandler::class,
-        AddAddressCommand::class     => AddressHandler::class,
-        UpdateAddressCommand::class  => AddressHandler::class,
-        AddStoreCommand::class       => StoreHandler::class,
-        UpdateStoreCommand::class    => StoreHandler::class,
-        AddStaffCommand::class       => StaffHandler::class,
-        UpdateStaffCommand::class    => StaffHandler::class,
-        AddCustomerCommand::class    => CustomerHandler::class,
-        UpdateCustomerCommand::class => CustomerHandler::class,
-        AddFilmCommand::class        => FilmHandler::class,
-        UpdateFilmCommand::class     => FilmHandler::class,
+        AddActorCommand::class        => ActorHandler::class,
+        UpdateActorCommand::class     => ActorHandler::class,
+        AddCategoryCommand::class     => CategoryHandler::class,
+        UpdateCategoryCommand::class  => CategoryHandler::class,
+        AddCountryCommand::class      => CountryHandler::class,
+        UpdateCountryCommand::class   => CountryHandler::class,
+        AddLanguageCommand::class     => LanguageHandler::class,
+        UpdateLanguageCommand::class  => LanguageHandler::class,
+        AddCityCommand::class         => CityHandler::class,
+        UpdateCityCommand::class      => CityHandler::class,
+        AddAddressCommand::class      => AddressHandler::class,
+        UpdateAddressCommand::class   => AddressHandler::class,
+        AddStoreCommand::class        => StoreHandler::class,
+        UpdateStoreCommand::class     => StoreHandler::class,
+        AddStaffCommand::class        => StaffHandler::class,
+        UpdateStaffCommand::class     => StaffHandler::class,
+        AddCustomerCommand::class     => CustomerHandler::class,
+        UpdateCustomerCommand::class  => CustomerHandler::class,
+        AddFilmCommand::class         => FilmHandler::class,
+        UpdateFilmCommand::class      => FilmHandler::class,
+        AddInventoryCommand::class    => InventoryHandler::class,
+        UpdateInventoryCommand::class => InventoryHandler::class,
     ];
 
     public function boot(): void

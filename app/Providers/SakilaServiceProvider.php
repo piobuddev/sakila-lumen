@@ -11,6 +11,7 @@ use Sakila\Domain\City\Repository\Database\CityRepository;
 use Sakila\Domain\Country\Repository\Database\CountryRepository;
 use Sakila\Domain\Customer\Repository\Database\CustomerRepository;
 use Sakila\Domain\Film\Repository\Database\FilmRepository;
+use Sakila\Domain\Inventory\Repository\Database\InventoryRepository;
 use Sakila\Domain\Language\Repository\Database\LanguageRepository;
 use Sakila\Domain\Staff\Repository\Database\StaffRepository;
 use Sakila\Domain\Store\Repository\Database\StoreRepository;
@@ -27,6 +28,7 @@ use Sakila\Validators\CityValidator;
 use Sakila\Validators\CountryValidator;
 use Sakila\Validators\CustomerValidator;
 use Sakila\Validators\FilmValidator;
+use Sakila\Validators\InventoryValidator;
 use Sakila\Validators\LanguageValidator;
 use Sakila\Validators\StaffValidator;
 use Sakila\Validators\StoreValidator;
@@ -66,6 +68,7 @@ class SakilaServiceProvider extends ServiceProvider
         $this->app->bind(\Sakila\Domain\Staff\Repository\StaffRepository::class, StaffRepository::class);
         $this->app->bind(\Sakila\Domain\Customer\Repository\CustomerRepository::class, CustomerRepository::class);
         $this->app->bind(\Sakila\Domain\Film\Repository\FilmRepository::class, FilmRepository::class);
+        $this->app->bind(\Sakila\Domain\Inventory\Repository\InventoryRepository::class, InventoryRepository::class);
     }
 
     /**
@@ -91,5 +94,6 @@ class SakilaServiceProvider extends ServiceProvider
         $this->app->bind(\Sakila\Domain\Staff\Validator\StaffValidator::class, StaffValidator::class);
         $this->app->bind(\Sakila\Domain\Customer\Validator\CustomerValidator::class, CustomerValidator::class);
         $this->app->bind(\Sakila\Domain\Film\Validator\FilmValidator::class, FilmValidator::class);
+        $this->app->bind(\Sakila\Domain\Inventory\Validator\InventoryValidator::class, InventoryValidator::class);
     }
 }
