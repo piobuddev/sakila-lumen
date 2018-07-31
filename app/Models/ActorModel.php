@@ -4,4 +4,7 @@ namespace Sakila\Models;
 
 class ActorModel extends AbstractModel
 {
+    protected $table = 'actor';
+
+    protected $primaryKey = 'actor_id';
 }
