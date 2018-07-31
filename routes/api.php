@@ -86,5 +86,11 @@ $router->group(['prefix' => 'api'], function () use ($router) {
         $router->get('rentals/{rentalId}', ['uses' => 'RentalController@show']);
         $router->put('rentals/{rentalId}', ['uses' => 'RentalController@update']);
         $router->delete('rentals/{rentalId}', ['uses' => 'RentalController@destroy']);
+
+        $router->get('payments', ['uses' => 'PaymentController@index']);
+        $router->post('payments', ['uses' => 'PaymentController@store']);
+        $router->get('payments/{paymentId}', ['uses' => 'PaymentController@show']);
+        $router->put('payments/{paymentId}', ['uses' => 'PaymentController@update']);
+        $router->delete('payments/{paymentId}', ['uses' => 'PaymentController@destroy']);
     });
 });
