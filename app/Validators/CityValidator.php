@@ -12,9 +12,9 @@ class CityValidator extends AbstractValidator implements CityValidatorInterface
     protected function getRules(): array
     {
         return [
-            'id'   => 'sometimes|required|exists:city,city_id',
-            'city' => ['required', 'max:50'],
-            //todo: add country id validation
+            'id'        => 'sometimes|required|exists:city,city_id',
+            'city'      => 'required|max:50',
+            'countryId' => 'required|exists:country,country_id',
         ];
     }
 }

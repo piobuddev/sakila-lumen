@@ -13,8 +13,8 @@ class ActorValidator extends AbstractValidator implements ActorValidatorInterfac
     {
         return [
             'id'        => 'sometimes|required|exists:actor,actor_id',
-            'firstName' => ['required', 'max:45'],
-            'lastName'  => ['required', 'max:45'],
+            'firstName' => 'required|alpha|string|max:45',
+            'lastName'  => 'required|alpha|string|max:45',
         ];
     }
 }

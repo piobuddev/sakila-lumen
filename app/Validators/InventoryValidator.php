@@ -12,9 +12,9 @@ class InventoryValidator extends AbstractValidator implements InventoryValidator
     protected function getRules(): array
     {
         return [
-            'inventoryId' => '',
-            'filmId'      => '',
-            'storeId'     => '',
+            'inventoryId' => 'sometimes|required|exists:inventory,inventory_id',
+            'filmId'      => 'required|exists:film,film_id',
+            'storeId'     => 'required|exists:store,store_id',
         ];
     }
 }

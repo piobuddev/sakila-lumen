@@ -12,12 +12,12 @@ class RentalValidator extends AbstractValidator implements RentalValidatorInterf
     protected function getRules(): array
     {
         return [
-            'rentalId'    => '',
-            'rentalDate'  => '',
-            'inventoryId' => '',
-            'customerId'  => '',
-            'returnDate'  => '',
-            'staffId'     => '',
+            'rentalId'    => 'sometimes|required|exists:rental,rental_id',
+            'rentalDate'  => 'required|date',
+            'inventoryId' => 'required|exists:inventory,inventory_id',
+            'customerId'  => 'required|exists:customer,customer_id',
+            'returnDate'  => 'date',
+            'staffId'     => 'required|exists:staff,staff_id',
         ];
     }
 }

@@ -12,15 +12,15 @@ class StaffValidator extends AbstractValidator implements StaffValidatorInterfac
     protected function getRules(): array
     {
         return [
-            'staffId'   => '',
-            'firstName' => '',
-            'lastName'  => '',
-            'addressId' => '',
+            'staffId'   => 'sometimes|required|exists:staff,staff_id',
+            'firstName' => 'required|alpha|string|max:45',
+            'lastName'  => 'required|alpha|string|max:45',
+            'addressId' => 'required|exists:address,address_id',
             'picture'   => '',
             'email'     => '',
-            'storeId'   => '',
-            'active'    => '',
-            'username'  => '',
+            'storeId'   => 'required|exists:store,store_id',
+            'active'    => 'boolean',
+            'username'  => 'string|max:15',
             'password'  => '',
         ];
     }

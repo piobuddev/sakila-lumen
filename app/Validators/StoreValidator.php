@@ -11,9 +11,10 @@ class StoreValidator extends AbstractValidator implements StoreValidatorInterfac
      */
     protected function getRules(): array
     {
-        //todo: implement
         return [
-            'store_id' => 'sometimes|required|exists:store,store_id',
+            'storeId'        => 'sometimes|required|exists:store,store_id',
+            'managerStaffId' => 'required|exists:staff,staff_id',
+            'addressId'      => 'required|exists:address,address_id',
         ];
     }
 }
