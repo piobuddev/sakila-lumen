@@ -2,6 +2,7 @@
 
 use Laravel\Lumen\Routing\Router;
 use Sakila\Providers\CommandBusProvider;
+use Sakila\Providers\SwaggerProvider;
 use Sakila\Transformer\FractalTransformerAdapter;
 use Sakila\Transformer\Transformer;
 
@@ -86,6 +87,7 @@ $app->singleton(Transformer::class, FractalTransformerAdapter::class);
 
  $app->register(Sakila\Providers\SakilaServiceProvider::class);
  $app->register(CommandBusProvider::class);
+ $app->register(SwaggerProvider::class);
 
 // $app->register(Sakila\Providers\AuthServiceProvider::class);
 // $app->register(Sakila\Providers\EventServiceProvider::class);

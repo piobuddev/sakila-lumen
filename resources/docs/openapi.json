@@ -1,0 +1,3049 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Sakila API",
+    "description": "This is a sample Sakila REST API ",
+    "contact": {
+      "name": "Piotr Budny",
+      "email": "piobuddev@gmail.com"
+    },
+    "license": {
+      "name": "MIT license",
+      "url": "https://github.com/piobuddev/sakila-lumen/blob/master/LICENCE"
+    },
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://sakila-lumen.local/api",
+      "description": "Local development server"
+    }
+  ],
+  "paths": {
+    "/actors": {
+      "get": {
+        "description": "Returns all actors",
+        "summary": "Get all actors",
+        "operationId": "getActors",
+        "responses": {
+          "200": {
+            "description": "An array of the Actor objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Actor"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          }
+        ],
+        "tags": [
+          "Actor"
+        ]
+      },
+      "post": {
+        "description": "Creates new actor",
+        "summary": "Create an actor",
+        "operationId": "createActor",
+        "responses": {
+          "201": {
+            "description": "The Actor object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Actor"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Actor"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Actor"
+        ]
+      }
+    },
+    "/actors/{id}": {
+      "get": {
+        "description": "Returns an actor by ID",
+        "summary": "Find an actor by ID",
+        "operationId": "getActor",
+        "responses": {
+          "200": {
+            "description": "An Actor object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Actor"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Actor ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Actor"
+        ]
+      },
+      "put": {
+        "summary": "Update an actor data",
+        "operationId": "updateActor",
+        "responses": {
+          "200": {
+            "description": "An Actor object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Actor"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Actor ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Actor"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Actor"
+        ]
+      },
+      "delete": {
+        "summary": "Remove an actor",
+        "operationId": "deleteActor",
+        "responses": {
+          "200": {
+            "description": "Empty response",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Actor ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Actor"
+        ]
+      }
+    },
+    "/addresses": {
+      "get": {
+        "description": "Returns all addresses",
+        "summary": "Get all addresses",
+        "operationId": "getAddresses",
+        "responses": {
+          "200": {
+            "description": "An array of the address objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Address"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          }
+        ],
+        "tags": [
+          "Address"
+        ]
+      },
+      "post": {
+        "description": "Creates new address",
+        "summary": "Create an address",
+        "operationId": "createAddress",
+        "responses": {
+          "201": {
+            "description": "The Address object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Address"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Address"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Address"
+        ]
+      }
+    },
+    "/addresses/{id}": {
+      "get": {
+        "description": "Returns an address by ID",
+        "summary": "Find an address by ID",
+        "operationId": "getAddress",
+        "responses": {
+          "200": {
+            "description": "An Address object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Address"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Address ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Address"
+        ]
+      },
+      "put": {
+        "summary": "Update an address data",
+        "operationId": "updateAddress",
+        "responses": {
+          "200": {
+            "description": "An Address object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Address"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Address ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Address"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Address"
+        ]
+      },
+      "delete": {
+        "summary": "Remove an address",
+        "operationId": "deleteAddress",
+        "responses": {
+          "200": {
+            "description": "Empty response",
+            "content": {
+              "application/json": {}
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Address ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Address"
+        ]
+      }
+    },
+    "/inventory": {
+      "get": {
+        "description": "Returns all inventories",
+        "summary": "Get all inventories",
+        "operationId": "getInventories",
+        "responses": {
+          "200": {
+            "description": "An array of the Inventory objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Inventory"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          }
+        ],
+        "tags": [
+          "Inventory"
+        ]
+      },
+      "post": {
+        "description": "Creates new inventory",
+        "summary": "Create an inventory",
+        "operationId": "createInventory",
+        "responses": {
+          "201": {
+            "description": "The Inventory object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Inventory"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Inventory"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Inventory"
+        ]
+      }
+    },
+    "/inventory/{id}": {
+      "get": {
+        "description": "Returns an inventory by ID",
+        "summary": "Find an inventory by ID",
+        "operationId": "getInventory",
+        "responses": {
+          "200": {
+            "description": "An Inventory object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Inventory"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Inventory ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Inventory"
+        ]
+      },
+      "put": {
+        "summary": "Update an inventory data",
+        "operationId": "updateInventory",
+        "responses": {
+          "200": {
+            "description": "An Inventory object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Inventory"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Inventory ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Inventory"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Inventory"
+        ]
+      },
+      "delete": {
+        "summary": "Remove an inventory",
+        "operationId": "deleteInventory",
+        "responses": {
+          "200": {
+            "description": "Empty response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Inventory ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Inventory"
+        ]
+      }
+    },
+    "/categories": {
+      "get": {
+        "description": "Returns all categories",
+        "summary": "Get all categories",
+        "operationId": "getCategories",
+        "responses": {
+          "200": {
+            "description": "A array of the Category objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Category"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          }
+        ],
+        "tags": [
+          "Category"
+        ]
+      },
+      "post": {
+        "description": "Creates new category",
+        "summary": "Create a category",
+        "operationId": "createCategory",
+        "responses": {
+          "201": {
+            "description": "The Category object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Category"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Category"
+        ]
+      }
+    },
+    "/categories/{id}": {
+      "get": {
+        "description": "Returns a category by ID",
+        "summary": "Find a category by ID",
+        "operationId": "getCategory",
+        "responses": {
+          "200": {
+            "description": "A Category object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Category ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Category"
+        ]
+      },
+      "put": {
+        "summary": "Update a category data",
+        "operationId": "updateCategory",
+        "responses": {
+          "200": {
+            "description": "A Category object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Category"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Category ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Category"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Category"
+        ]
+      },
+      "delete": {
+        "summary": "Remove a category",
+        "operationId": "deleteCategory",
+        "responses": {
+          "200": {
+            "description": "Empty response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Category ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Category"
+        ]
+      }
+    },
+    "/cities": {
+      "get": {
+        "description": "Returns all cities",
+        "summary": "Get all cities",
+        "operationId": "getCities",
+        "responses": {
+          "200": {
+            "description": "A array of the City objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/City"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          }
+        ],
+        "tags": [
+          "City"
+        ]
+      },
+      "post": {
+        "description": "Creates new city",
+        "summary": "Create a city",
+        "operationId": "createCity",
+        "responses": {
+          "201": {
+            "description": "The City object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/City"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/City"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "City"
+        ]
+      }
+    },
+    "/cities/{id}": {
+      "get": {
+        "description": "Returns a city by ID",
+        "summary": "Find a city by ID",
+        "operationId": "getCity",
+        "responses": {
+          "200": {
+            "description": "A City object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/City"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "City ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "City"
+        ]
+      },
+      "put": {
+        "summary": "Update a city data",
+        "operationId": "updateCity",
+        "responses": {
+          "200": {
+            "description": "A City object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/City"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "City ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/City"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "City"
+        ]
+      },
+      "delete": {
+        "summary": "Remove a city",
+        "operationId": "deleteCity",
+        "responses": {
+          "200": {
+            "description": "Empty response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "City ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "City"
+        ]
+      }
+    },
+    "/countries": {
+      "get": {
+        "description": "Returns all countries",
+        "summary": "Get all countries",
+        "operationId": "getCountries",
+        "responses": {
+          "200": {
+            "description": "A array of the Country objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Country"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          }
+        ],
+        "tags": [
+          "Country"
+        ]
+      },
+      "post": {
+        "description": "Creates new country",
+        "summary": "Create a country",
+        "operationId": "createCountry",
+        "responses": {
+          "201": {
+            "description": "The Country object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Country"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Country"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Country"
+        ]
+      }
+    },
+    "/countries/{id}": {
+      "get": {
+        "description": "Returns a country by ID",
+        "summary": "Find a country by ID",
+        "operationId": "getCountry",
+        "responses": {
+          "200": {
+            "description": "A Country object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Country"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Country ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Country"
+        ]
+      },
+      "put": {
+        "summary": "Update a country data",
+        "operationId": "updateCountry",
+        "responses": {
+          "200": {
+            "description": "A Country object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Country"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Country ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Country"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Country"
+        ]
+      },
+      "delete": {
+        "summary": "Remove a country",
+        "operationId": "deleteCountry",
+        "responses": {
+          "200": {
+            "description": "Empty response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Country ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Country"
+        ]
+      }
+    },
+    "/customers": {
+      "get": {
+        "description": "Returns all customers",
+        "summary": "Get all customers",
+        "operationId": "getCustomers",
+        "responses": {
+          "200": {
+            "description": "A array of the Customer objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Customer"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          }
+        ],
+        "tags": [
+          "Customer"
+        ]
+      },
+      "post": {
+        "description": "Creates new customer",
+        "summary": "Create a customer",
+        "operationId": "createCustomer",
+        "responses": {
+          "201": {
+            "description": "The Customer object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Customer"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Customer"
+        ]
+      }
+    },
+    "/customers/{id}": {
+      "get": {
+        "description": "Returns a customer by ID",
+        "summary": "Find a customer by ID",
+        "operationId": "getCustomer",
+        "responses": {
+          "200": {
+            "description": "A Customer object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Customer ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Customer"
+        ]
+      },
+      "put": {
+        "summary": "Update a customer data",
+        "operationId": "updateCustomer",
+        "responses": {
+          "200": {
+            "description": "A Customer object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Customer"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Customer ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Customer"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Customer"
+        ]
+      },
+      "delete": {
+        "summary": "Remove a customer",
+        "operationId": "deleteCustomer",
+        "responses": {
+          "200": {
+            "description": "Empty response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Customer ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Customer"
+        ]
+      }
+    },
+    "/films": {
+      "get": {
+        "description": "Returns all films",
+        "summary": "Get all films",
+        "operationId": "getFilms",
+        "responses": {
+          "200": {
+            "description": "A array of the Film objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Film"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          }
+        ],
+        "tags": [
+          "Film"
+        ]
+      },
+      "post": {
+        "description": "Creates new film",
+        "summary": "Create a film",
+        "operationId": "createFilm",
+        "responses": {
+          "201": {
+            "description": "The Film object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Film"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Film"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Film"
+        ]
+      }
+    },
+    "/films/{id}": {
+      "get": {
+        "description": "Returns a film by ID",
+        "summary": "Find a film by ID",
+        "operationId": "getFilm",
+        "responses": {
+          "200": {
+            "description": "A Film object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Film"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Film ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Film"
+        ]
+      },
+      "put": {
+        "summary": "Update a film data",
+        "operationId": "updateFilm",
+        "responses": {
+          "200": {
+            "description": "A Film object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Film"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Film ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Film"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Film"
+        ]
+      },
+      "delete": {
+        "summary": "Remove a film",
+        "operationId": "deleteFilm",
+        "responses": {
+          "200": {
+            "description": "Empty response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Film ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Film"
+        ]
+      }
+    },
+    "/languages": {
+      "get": {
+        "description": "Returns all languages",
+        "summary": "Get all languages",
+        "operationId": "getLanguages",
+        "responses": {
+          "200": {
+            "description": "A array of the Language objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Language"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          }
+        ],
+        "tags": [
+          "Language"
+        ]
+      },
+      "post": {
+        "description": "Creates new language",
+        "summary": "Create a language",
+        "operationId": "createLanguage",
+        "responses": {
+          "201": {
+            "description": "The Language object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Language"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Language"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Language"
+        ]
+      }
+    },
+    "/languages/{id}": {
+      "get": {
+        "description": "Returns a language by ID",
+        "summary": "Find a language by ID",
+        "operationId": "getLanguage",
+        "responses": {
+          "200": {
+            "description": "A Language object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Language"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Language ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Language"
+        ]
+      },
+      "put": {
+        "summary": "Update a language data",
+        "operationId": "updateLanguage",
+        "responses": {
+          "200": {
+            "description": "A Language object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Language"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Language ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Language"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Language"
+        ]
+      },
+      "delete": {
+        "summary": "Remove a language",
+        "operationId": "deleteLanguage",
+        "responses": {
+          "200": {
+            "description": "Empty response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Language ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Language"
+        ]
+      }
+    },
+    "/payments": {
+      "get": {
+        "description": "Returns all payments",
+        "summary": "Get all payments",
+        "operationId": "getPayments",
+        "responses": {
+          "200": {
+            "description": "A array of the Payment objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Payment"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          }
+        ],
+        "tags": [
+          "Payment"
+        ]
+      },
+      "post": {
+        "description": "Creates new payment",
+        "summary": "Create a payment",
+        "operationId": "createPayment",
+        "responses": {
+          "201": {
+            "description": "The Payment object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payment"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Payment"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Payment"
+        ]
+      }
+    },
+    "/payments/{id}": {
+      "get": {
+        "description": "Returns a payment by ID",
+        "summary": "Find a payment by ID",
+        "operationId": "getPayment",
+        "responses": {
+          "200": {
+            "description": "A Payment object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payment"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Payment ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Payment"
+        ]
+      },
+      "put": {
+        "summary": "Update a payment data",
+        "operationId": "updatePayment",
+        "responses": {
+          "200": {
+            "description": "A Payment object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Payment"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Payment ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Payment"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Payment"
+        ]
+      },
+      "delete": {
+        "summary": "Remove a payment",
+        "operationId": "deletePayment",
+        "responses": {
+          "200": {
+            "description": "Empty response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Payment ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Payment"
+        ]
+      }
+    },
+    "/rentals": {
+      "get": {
+        "description": "Returns all rentals",
+        "summary": "Get all rentals",
+        "operationId": "getRentals",
+        "responses": {
+          "200": {
+            "description": "A array of the Rental objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Rental"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          }
+        ],
+        "tags": [
+          "Rental"
+        ]
+      },
+      "post": {
+        "description": "Creates new rental",
+        "summary": "Create a rental",
+        "operationId": "createRental",
+        "responses": {
+          "201": {
+            "description": "The Rental object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rental"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Rental"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Rental"
+        ]
+      }
+    },
+    "/rentals/{id}": {
+      "get": {
+        "description": "Returns a rental by ID",
+        "summary": "Find a rental by ID",
+        "operationId": "getRental",
+        "responses": {
+          "200": {
+            "description": "A Rental object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rental"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Rental ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Rental"
+        ]
+      },
+      "put": {
+        "summary": "Update a rental data",
+        "operationId": "updateRental",
+        "responses": {
+          "200": {
+            "description": "A Rental object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Rental"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Rental ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Rental"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Rental"
+        ]
+      },
+      "delete": {
+        "summary": "Remove a rental",
+        "operationId": "deleteRental",
+        "responses": {
+          "200": {
+            "description": "Empty response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Rental ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Rental"
+        ]
+      }
+    },
+    "/staff": {
+      "get": {
+        "description": "Returns all staff",
+        "summary": "Get all staff",
+        "operationId": "getStaff",
+        "responses": {
+          "200": {
+            "description": "A array of the Staff objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Staff"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          }
+        ],
+        "tags": [
+          "Staff"
+        ]
+      },
+      "post": {
+        "description": "Creates new staff",
+        "summary": "Create a staff",
+        "operationId": "createStaff",
+        "responses": {
+          "201": {
+            "description": "The Staff object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Staff"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Staff"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Staff"
+        ]
+      }
+    },
+    "/staff/{id}": {
+      "get": {
+        "description": "Returns a staff by ID",
+        "summary": "Find a staff by ID",
+        "operationId": "getStaff",
+        "responses": {
+          "200": {
+            "description": "A Staff object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Staff"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Staff ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Staff"
+        ]
+      },
+      "put": {
+        "summary": "Update a staff data",
+        "operationId": "updateStaff",
+        "responses": {
+          "200": {
+            "description": "A Staff object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Staff"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Staff ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Staff"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Staff"
+        ]
+      },
+      "delete": {
+        "summary": "Remove a staff",
+        "operationId": "deleteStaff",
+        "responses": {
+          "200": {
+            "description": "Empty response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Staff ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Staff"
+        ]
+      }
+    },
+    "/stores": {
+      "get": {
+        "description": "Returns all stores",
+        "summary": "Get all stores",
+        "operationId": "getStores",
+        "responses": {
+          "200": {
+            "description": "A array of the Store objects",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Store"
+                  }
+                }
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/Page"
+          },
+          {
+            "$ref": "#/components/parameters/PageSize"
+          }
+        ],
+        "tags": [
+          "Store"
+        ]
+      },
+      "post": {
+        "description": "Creates new store",
+        "summary": "Create a store",
+        "operationId": "createStore",
+        "responses": {
+          "201": {
+            "description": "The Store object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Store"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Store"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Store"
+        ]
+      }
+    },
+    "/stores/{id}": {
+      "get": {
+        "description": "Returns a store by ID",
+        "summary": "Find a store by ID",
+        "operationId": "getStore",
+        "responses": {
+          "200": {
+            "description": "A Store object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Store"
+                }
+              }
+            }
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Store ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Store"
+        ]
+      },
+      "put": {
+        "summary": "Update a store data",
+        "operationId": "updateStore",
+        "responses": {
+          "200": {
+            "description": "A Store object",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Store"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Store ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Store"
+              }
+            }
+          },
+          "required": true
+        },
+        "tags": [
+          "Store"
+        ]
+      },
+      "delete": {
+        "summary": "Remove a store",
+        "operationId": "deleteStore",
+        "responses": {
+          "200": {
+            "description": "Empty response",
+            "content": {
+              "application/json": {
+              }
+            }
+          },
+          "default": {
+            "$ref": "#/components/responses/ErrorResponse"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "description": "Store ID",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32"
+            },
+            "style": "simple"
+          }
+        ],
+        "tags": [
+          "Store"
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Actor": {
+        "type": "object",
+        "properties": {
+          "actorId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "firstName",
+          "lastName"
+        ]
+      },
+      "Address": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "address": {
+            "type": "string"
+          },
+          "address2": {
+            "type": "string"
+          },
+          "district": {
+            "type": "string"
+          },
+          "cityId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "postalCode": {
+            "type": "string"
+          },
+          "phone": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "address",
+          "district",
+          "cityId",
+          "phone"
+        ]
+      },
+      "Inventory": {
+        "type": "object",
+        "properties": {
+          "inventoryId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "filmId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "storeId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "required": [
+          "filmId",
+          "storeId"
+        ]
+      },
+      "Category": {
+        "type": "object",
+        "properties": {
+          "categoryId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "City": {
+        "type": "object",
+        "properties": {
+          "cityId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "city": {
+            "type": "string"
+          },
+          "countryId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "required": [
+          "city",
+          "countryId"
+        ]
+      },
+      "Country": {
+        "type": "object",
+        "properties": {
+          "countryId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "country": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "country"
+        ]
+      },
+      "Customer": {
+        "type": "object",
+        "properties": {
+          "customerId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "storeId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "addressId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "createDate": {
+            "type": "string",
+            "format": "dateTime"
+          }
+        },
+        "required": [
+          "storeId",
+          "firstName",
+          "lastName",
+          "addressId"
+        ]
+      },
+      "Film": {
+        "type": "object",
+        "properties": {
+          "filmId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "releaseYear": {
+            "type": "integer"
+          },
+          "languageId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "originalLanguageId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "rentalDuration": {
+            "type": "integer"
+          },
+          "rentalRate": {
+            "type": "number",
+            "format": "double"
+          },
+          "length": {
+            "type": "integer"
+          },
+          "replacementCost": {
+            "type": "number",
+            "format": "double"
+          },
+          "rating": {
+            "type": "string"
+          },
+          "specialFeatures": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "title",
+          "languageId"
+        ]
+      },
+      "Language": {
+        "type": "object",
+        "properties": {
+          "languageId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "Payment": {
+        "type": "object",
+        "properties": {
+          "paymentId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "customerId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "staffId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "rentalId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "amount": {
+            "type": "number",
+            "format": "double"
+          },
+          "paymentDate": {
+            "type": "string",
+            "format": "dateTime"
+          }
+        },
+        "required": [
+          "customerId",
+          "staffId",
+          "rentalId",
+          "amount",
+          "paymentDate"
+        ]
+      },
+      "Rental": {
+        "type": "object",
+        "properties": {
+          "rentalId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "rentalDate": {
+            "type": "string",
+            "format": "dateTime"
+          },
+          "inventoryId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "customerId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "returnDate": {
+            "type": "string",
+            "format": "dateTime"
+          },
+          "staffId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "required": [
+          "rentalDate",
+          "inventoryId",
+          "customerId",
+          "staffId"
+        ]
+      },
+      "Staff": {
+        "type": "object",
+        "properties": {
+          "staffId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "addressId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "email": {
+            "type": "string"
+          },
+          "storeId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "username": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "firstName",
+          "lastName",
+          "addressId",
+          "storeId"
+        ]
+      },
+      "Store": {
+        "type": "object",
+        "properties": {
+          "storeId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "managerStaffId": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "addressId": {
+            "type": "integer",
+            "format": "int64"
+          }
+        },
+        "required": [
+          "managerStaffId",
+          "addressId"
+        ]
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "integer"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "parameters": {
+      "Page": {
+        "name": "page",
+        "in": "query",
+        "description": "Page number",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "format": "int32",
+          "default": 1
+        },
+        "style": "simple"
+      },
+      "PageSize": {
+        "name": "page_size",
+        "in": "query",
+        "description": "Number of results",
+        "required": false,
+        "schema": {
+          "type": "integer",
+          "format": "int32",
+          "default": 15
+        },
+        "style": "simple"
+      }
+    },
+    "responses": {
+      "NotFound": {
+        "description": "Entity not found"
+      },
+      "ValidationError": {
+        "description": "Input validation error"
+      },
+      "ErrorResponse": {
+        "description": "Error response",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Actor",
+      "description": "Actor operations"
+    },
+    {
+      "name": "Address",
+      "description": "Address operations"
+    },
+    {
+      "name": "Inventory",
+      "description": "Inventory operations"
+    },
+    {
+      "name": "Category",
+      "description": "Category operations"
+    },
+    {
+      "name": "City",
+      "description": "City operations"
+    },
+    {
+      "name": "Country",
+      "description": "Country operations"
+    },
+    {
+      "name": "Customer",
+      "description": "Customer operations"
+    },
+    {
+      "name": "Film",
+      "description": "Film operations"
+    },
+    {
+      "name": "Language",
+      "description": "Language operations"
+    },
+    {
+      "name": "Payment",
+      "description": "Payment operations"
+    },
+    {
+      "name": "Rental",
+      "description": "Rental operations"
+    },
+    {
+      "name": "Staff",
+      "description": "Staff operations"
+    },
+    {
+      "name": "Store",
+      "description": "Store operations"
+    }
+  ]
+}
