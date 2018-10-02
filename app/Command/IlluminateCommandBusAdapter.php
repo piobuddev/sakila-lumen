@@ -30,15 +30,13 @@ class IlluminateCommandBusAdapter implements CommandBus
     public function execute(Command $command)
     {
         if ($handler = $this->dispatcher->getCommandHandler($command)) {
-            $classBasename = class_basename($command);
-            $method        = 'handle' . str_replace('Command', '', $classBasename);
-
-            if (method_exists($handler, $method)) {
-                return $handler->{$method}($command);
+            $methodName = 'execute';
+            if (method_exists($handler, $methodName)) {
+                return $handler->{$methodName}($command);
             }
         }
 
-        return $this->dispatcher->dispatch($command);
+        return $this->dispatcher->dispatchNow($command);
     }
 
     /**

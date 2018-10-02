@@ -4,30 +4,26 @@ namespace Sakila\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Sakila\Command\Bus\CommandBus;
-use Sakila\Domain\Actor\Commands\AddActorCommand;
-use Sakila\Domain\Actor\Commands\UpdateActorCommand;
-use Sakila\Domain\Actor\Repository\ActorRepository;
-use Sakila\Transformer\ActorTransformer;
-use Sakila\Transformer\Transformer;
+use Sakila\Domain\Actor\Service\Request\AddActorRequest;
+use Sakila\Domain\Actor\Service\Request\RemoveActorRequest;
+use Sakila\Domain\Actor\Service\Request\ShowActorRequest;
+use Sakila\Domain\Actor\Service\Request\ShowActorsRequest;
+use Sakila\Domain\Actor\Service\Request\UpdateActorRequest;
 
 class ActorController extends AbstractController
 {
     /**
-     * @var \Sakila\Domain\Actor\Repository\ActorRepository
+     * @var \Sakila\Command\Bus\CommandBus
      */
-    private $repository;
+    private $commandBus;
 
     /**
-     * @param \Sakila\Domain\Actor\Repository\ActorRepository $repository
-     * @param \Sakila\Transformer\Transformer                 $transformer
+     * @param \Sakila\Command\Bus\CommandBus $commandBus
      */
-    public function __construct(ActorRepository $repository, Transformer $transformer)
+    public function __construct(CommandBus $commandBus)
     {
-        $this->repository = $repository;
-
-        parent::__construct($transformer);
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -37,9 +33,9 @@ class ActorController extends AbstractController
      */
     public function show(int $actorId): Response
     {
-        $actor = $this->repository->get($actorId);
+        $actor = $this->commandBus->execute(new ShowActorRequest($actorId));
 
-        return $this->response($this->item($actor, ActorTransformer::class));
+        return $this->response($actor);
     }
 
     /**
@@ -49,41 +45,36 @@ class ActorController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $page     = (int)$request->query('page', 1);
-        $pageSize = (int)$request->query('page_size', 15);
-        $items    = $this->repository->all($page, $pageSize);
-        $total    = $this->repository->count();
-        $actors   = new LengthAwarePaginator($items, $total, $pageSize, $page);
+        $page     = (int)$request->query('page', self::DEFAULT_PAGE);
+        $pageSize = (int)$request->query('page_size', self::DEFAULT_PAGE_SIZE);
+        $actors   = $this->commandBus->execute(new ShowActorsRequest($page, $pageSize));
 
-        return $this->response($this->collection($actors, ActorTransformer::class));
+        return $this->response($actors);
     }
 
     /**
-     * @param \Illuminate\Http\Request       $request
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, CommandBus $commandBus): Response
+    public function store(Request $request): Response
     {
-        $actor = $commandBus->execute(new AddActorCommand($request->post()));
+        $actor = $this->commandBus->execute(new AddActorRequest($request->post()));
 
-        return $this->response($this->item($actor, ActorTransformer::class), Response::HTTP_CREATED);
+        return $this->response($actor, Response::HTTP_CREATED);
     }
 
     /**
-     * @param int                            $actorId
-     * @param \Illuminate\Http\Request       $request
-     *
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param int                      $actorId
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(int $actorId, Request $request, CommandBus $commandBus): Response
+    public function update(int $actorId, Request $request): Response
     {
-        $actor = $commandBus->execute(new UpdateActorCommand($actorId, $request->post()));
+        $actor = $this->commandBus->execute(new UpdateActorRequest($actorId, $request->post()));
 
-        return $this->response($this->item($actor, ActorTransformer::class));
+        return $this->response($actor);
     }
 
     /**
@@ -93,7 +84,7 @@ class ActorController extends AbstractController
      */
     public function destroy(int $actorId): Response
     {
-        $this->repository->remove($actorId);
+        $this->commandBus->execute(new RemoveActorRequest($actorId));
 
         return $this->response();
     }

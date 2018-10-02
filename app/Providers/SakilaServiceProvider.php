@@ -4,6 +4,7 @@ namespace Sakila\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use League\Fractal\Manager;
+use Sakila\Domain\Actor\Entity\Transformer\ActorTransformerInterface;
 use Sakila\Domain\Actor\Repository\Database\ActorRepository;
 use Sakila\Domain\Address\Repository\Database\AddressRepository;
 use Sakila\Domain\Category\Repository\Database\CategoryRepository;
@@ -23,6 +24,7 @@ use Sakila\Repository\Database\ConnectionInterface;
 use Sakila\Repository\Database\Illuminate\Connection;
 use Sakila\Repository\Database\Table\NameResolver;
 use Sakila\Repository\Database\Table\SimpleNameResolver;
+use Sakila\Transformer\ActorTransformer;
 use Sakila\Validators\ActorValidator;
 use Sakila\Validators\AddressValidator;
 use Sakila\Validators\CategoryValidator;
@@ -54,6 +56,7 @@ class SakilaServiceProvider extends ServiceProvider
 
         $this->registerDatabaseConnection();
         $this->registerRepositories();
+        $this->registerTransformers();
         $this->registerValidators();
     }
 
@@ -103,5 +106,10 @@ class SakilaServiceProvider extends ServiceProvider
         $this->app->bind(\Sakila\Domain\Inventory\Validator\InventoryValidator::class, InventoryValidator::class);
         $this->app->bind(\Sakila\Domain\Rental\Validator\RentalValidator::class, RentalValidator::class);
         $this->app->bind(\Sakila\Domain\Payment\Validator\PaymentValidator::class, PaymentValidator::class);
+    }
+
+    private function registerTransformers()
+    {
+        $this->app->bind(ActorTransformerInterface::class, ActorTransformer::class);
     }
 }

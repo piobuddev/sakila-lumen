@@ -49,16 +49,28 @@ class FractalTransformerAdapter implements Transformer
     }
 
     /**
-     * @param mixed  $data
-     * @param string $transformer
+     * @param mixed    $data
+     * @param string   $transformer
+     * @param int|null $page
+     * @param int|null $pageSize
+     * @param int|null $total
      *
      * @return array
      */
-    public function collection($data, string $transformer = null): array
-    {
+    public function collection(
+        $data,
+        string $transformer = null,
+        int $page = null,
+        int $pageSize = null,
+        int $total = null
+    ): array {
         $collection = new Collection($data, $this->resolveTransformer($transformer));
-        if ($data instanceof LengthAwarePaginator) {
-            $collection->setPaginator(new IlluminatePaginatorAdapter($data));
+        if (null !== $page) {
+            $collection->setPaginator(
+                new IlluminatePaginatorAdapter(
+                    new LengthAwarePaginator($data, $total, $pageSize, $page)
+                )
+            );
         }
 
         return $this->manager->createData($collection)->toArray();
