@@ -4,30 +4,26 @@ namespace Sakila\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Sakila\Command\Bus\CommandBus;
-use Sakila\Domain\Customer\Commands\AddCustomerCommand;
-use Sakila\Domain\Customer\Commands\UpdateCustomerCommand;
-use Sakila\Domain\Customer\Repository\CustomerRepository;
-use Sakila\Transformer\CustomerTransformer;
-use Sakila\Transformer\Transformer;
+use Sakila\Domain\Customer\Service\Request\AddCustomerRequest;
+use Sakila\Domain\Customer\Service\Request\RemoveCustomerRequest;
+use Sakila\Domain\Customer\Service\Request\ShowCustomerRequest;
+use Sakila\Domain\Customer\Service\Request\ShowCustomersRequest;
+use Sakila\Domain\Customer\Service\Request\UpdateCustomerRequest;
 
 class CustomerController extends AbstractController
 {
     /**
-     * @var \Sakila\Domain\Customer\Repository\CustomerRepository
+     * @var \Sakila\Command\Bus\CommandBus
      */
-    private $repository;
+    private $commandBus;
 
     /**
-     * @param \Sakila\Domain\Customer\Repository\CustomerRepository $repository
-     * @param \Sakila\Transformer\Transformer                       $transformer
+     * @param \Sakila\Command\Bus\CommandBus $commandBus
      */
-    public function __construct(CustomerRepository $repository, Transformer $transformer)
+    public function __construct(CommandBus $commandBus)
     {
-        $this->repository = $repository;
-
-        parent::__construct($transformer);
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -37,9 +33,9 @@ class CustomerController extends AbstractController
      */
     public function show(int $customerId): Response
     {
-        $customer = $this->repository->get($customerId);
+        $customer = $this->commandBus->execute(new ShowCustomerRequest($customerId));
 
-        return $this->response($this->item($customer, CustomerTransformer::class));
+        return $this->response($customer);
     }
 
     /**
@@ -49,41 +45,36 @@ class CustomerController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $page      = (int)$request->query('page', 1);
-        $pageSize  = (int)$request->query('page_size', 15);
-        $items     = $this->repository->all($page, $pageSize);
-        $total     = $this->repository->count();
-        $customers = new LengthAwarePaginator($items, $total, $pageSize, $page);
+        $page      = (int)$request->query('page', self::DEFAULT_PAGE);
+        $pageSize  = (int)$request->query('page_size', self::DEFAULT_PAGE_SIZE);
+        $customers = $this->commandBus->execute(new ShowCustomersRequest($page, $pageSize));
 
-        return $this->response($this->collection($customers, CustomerTransformer::class));
+        return $this->response($customers);
     }
 
     /**
-     * @param \Illuminate\Http\Request       $request
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, CommandBus $commandBus): Response
+    public function store(Request $request): Response
     {
-        $customer = $commandBus->execute(new AddCustomerCommand($request->post()));
+        $customer = $this->commandBus->execute(new AddCustomerRequest($request->post()));
 
-        return $this->response($this->item($customer, CustomerTransformer::class), Response::HTTP_CREATED);
+        return $this->response($customer, Response::HTTP_CREATED);
     }
 
     /**
-     * @param int                            $customerId
-     * @param \Illuminate\Http\Request       $request
-     *
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param int                      $customerId
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(int $customerId, Request $request, CommandBus $commandBus): Response
+    public function update(int $customerId, Request $request): Response
     {
-        $customer = $commandBus->execute(new UpdateCustomerCommand($customerId, $request->post()));
+        $customer = $this->commandBus->execute(new UpdateCustomerRequest($customerId, $request->post()));
 
-        return $this->response($this->item($customer, CustomerTransformer::class));
+        return $this->response($customer);
     }
 
     /**
@@ -93,7 +84,7 @@ class CustomerController extends AbstractController
      */
     public function destroy(int $customerId): Response
     {
-        $this->repository->remove($customerId);
+        $this->commandBus->execute(new RemoveCustomerRequest($customerId));
 
         return $this->response();
     }

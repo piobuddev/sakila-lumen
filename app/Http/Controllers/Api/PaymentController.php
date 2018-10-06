@@ -4,30 +4,26 @@ namespace Sakila\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Sakila\Command\Bus\CommandBus;
-use Sakila\Domain\Payment\Commands\AddPaymentCommand;
-use Sakila\Domain\Payment\Commands\UpdatePaymentCommand;
-use Sakila\Domain\Payment\Repository\PaymentRepository;
-use Sakila\Transformer\PaymentTransformer;
-use Sakila\Transformer\Transformer;
+use Sakila\Domain\Payment\Service\Request\AddPaymentRequest;
+use Sakila\Domain\Payment\Service\Request\RemovePaymentRequest;
+use Sakila\Domain\Payment\Service\Request\ShowPaymentRequest;
+use Sakila\Domain\Payment\Service\Request\ShowPaymentsRequest;
+use Sakila\Domain\Payment\Service\Request\UpdatePaymentRequest;
 
 class PaymentController extends AbstractController
 {
     /**
-     * @var \Sakila\Domain\Payment\Repository\PaymentRepository
+     * @var \Sakila\Command\Bus\CommandBus
      */
-    private $repository;
+    private $commandBus;
 
     /**
-     * @param \Sakila\Domain\Payment\Repository\PaymentRepository $repository
-     * @param \Sakila\Transformer\Transformer                     $transformer
+     * @param \Sakila\Command\Bus\CommandBus $commandBus
      */
-    public function __construct(PaymentRepository $repository, Transformer $transformer)
+    public function __construct(CommandBus $commandBus)
     {
-        $this->repository = $repository;
-
-        parent::__construct($transformer);
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -37,9 +33,9 @@ class PaymentController extends AbstractController
      */
     public function show(int $paymentId): Response
     {
-        $payment = $this->repository->get($paymentId);
+        $payment = $this->commandBus->execute(new ShowPaymentRequest($paymentId));
 
-        return $this->response($this->item($payment, PaymentTransformer::class));
+        return $this->response($payment);
     }
 
     /**
@@ -49,41 +45,36 @@ class PaymentController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $page     = (int)$request->query('page', 1);
-        $pageSize = (int)$request->query('page_size', 15);
-        $items    = $this->repository->all($page, $pageSize);
-        $total    = $this->repository->count();
-        $payments = new LengthAwarePaginator($items, $total, $pageSize, $page);
+        $page     = (int)$request->query('page', self::DEFAULT_PAGE);
+        $pageSize = (int)$request->query('page_size', self::DEFAULT_PAGE_SIZE);
+        $payments = $this->commandBus->execute(new ShowPaymentsRequest($page, $pageSize));
 
-        return $this->response($this->collection($payments, PaymentTransformer::class));
+        return $this->response($payments);
     }
 
     /**
-     * @param \Illuminate\Http\Request       $request
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, CommandBus $commandBus): Response
+    public function store(Request $request): Response
     {
-        $payment = $commandBus->execute(new AddPaymentCommand($request->post()));
+        $payment = $this->commandBus->execute(new AddPaymentRequest($request->post()));
 
-        return $this->response($this->item($payment, PaymentTransformer::class), Response::HTTP_CREATED);
+        return $this->response($payment, Response::HTTP_CREATED);
     }
 
     /**
-     * @param int                            $paymentId
-     * @param \Illuminate\Http\Request       $request
-     *
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param int                      $paymentId
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(int $paymentId, Request $request, CommandBus $commandBus): Response
+    public function update(int $paymentId, Request $request): Response
     {
-        $payment = $commandBus->execute(new UpdatePaymentCommand($paymentId, $request->post()));
+        $payment = $this->commandBus->execute(new UpdatePaymentRequest($paymentId, $request->post()));
 
-        return $this->response($this->item($payment, PaymentTransformer::class));
+        return $this->response($payment);
     }
 
     /**
@@ -93,7 +84,7 @@ class PaymentController extends AbstractController
      */
     public function destroy(int $paymentId): Response
     {
-        $this->repository->remove($paymentId);
+        $this->commandBus->execute(new RemovePaymentRequest($paymentId));
 
         return $this->response();
     }

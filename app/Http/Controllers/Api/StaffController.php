@@ -4,30 +4,26 @@ namespace Sakila\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Sakila\Command\Bus\CommandBus;
-use Sakila\Domain\Staff\Commands\AddStaffCommand;
-use Sakila\Domain\Staff\Commands\UpdateStaffCommand;
-use Sakila\Domain\Staff\Repository\StaffRepository;
-use Sakila\Transformer\StaffTransformer;
-use Sakila\Transformer\Transformer;
+use Sakila\Domain\Staff\Service\Request\AddStaffRequest;
+use Sakila\Domain\Staff\Service\Request\RemoveStaffRequest;
+use Sakila\Domain\Staff\Service\Request\ShowStaffMemberRequest;
+use Sakila\Domain\Staff\Service\Request\ShowStaffRequest;
+use Sakila\Domain\Staff\Service\Request\UpdateStaffRequest;
 
 class StaffController extends AbstractController
 {
     /**
-     * @var \Sakila\Domain\Staff\Repository\StaffRepository
+     * @var \Sakila\Command\Bus\CommandBus
      */
-    private $repository;
+    private $commandBus;
 
     /**
-     * @param \Sakila\Domain\Staff\Repository\StaffRepository $repository
-     * @param \Sakila\Transformer\Transformer               $transformer
+     * @param \Sakila\Command\Bus\CommandBus $commandBus
      */
-    public function __construct(StaffRepository $repository, Transformer $transformer)
+    public function __construct(CommandBus $commandBus)
     {
-        $this->repository = $repository;
-
-        parent::__construct($transformer);
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -37,9 +33,9 @@ class StaffController extends AbstractController
      */
     public function show(int $staffId): Response
     {
-        $staff = $this->repository->get($staffId);
+        $staff = $this->commandBus->execute(new ShowStaffMemberRequest($staffId));
 
-        return $this->response($this->item($staff, StaffTransformer::class));
+        return $this->response($staff);
     }
 
     /**
@@ -49,41 +45,36 @@ class StaffController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $page     = (int)$request->query('page', 1);
-        $pageSize = (int)$request->query('page_size', 15);
-        $items    = $this->repository->all($page, $pageSize);
-        $total    = $this->repository->count();
-        $staff   = new LengthAwarePaginator($items, $total, $pageSize, $page);
+        $page     = (int)$request->query('page', self::DEFAULT_PAGE);
+        $pageSize = (int)$request->query('page_size', self::DEFAULT_PAGE_SIZE);
+        $staff    = $this->commandBus->execute(new ShowStaffRequest($page, $pageSize));
 
-        return $this->response($this->collection($staff, StaffTransformer::class));
+        return $this->response($staff);
     }
 
     /**
-     * @param \Illuminate\Http\Request       $request
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, CommandBus $commandBus): Response
+    public function store(Request $request): Response
     {
-        $staff = $commandBus->execute(new AddStaffCommand($request->post()));
+        $staff = $this->commandBus->execute(new AddStaffRequest($request->post()));
 
-        return $this->response($this->item($staff, StaffTransformer::class), Response::HTTP_CREATED);
+        return $this->response($staff, Response::HTTP_CREATED);
     }
 
     /**
-     * @param int                            $staffId
-     * @param \Illuminate\Http\Request       $request
-     *
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param int                      $staffId
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(int $staffId, Request $request, CommandBus $commandBus): Response
+    public function update(int $staffId, Request $request): Response
     {
-        $staff = $commandBus->execute(new UpdateStaffCommand($staffId, $request->post()));
+        $staff = $this->commandBus->execute(new UpdateStaffRequest($staffId, $request->post()));
 
-        return $this->response($this->item($staff, StaffTransformer::class));
+        return $this->response($staff);
     }
 
     /**
@@ -93,7 +84,7 @@ class StaffController extends AbstractController
      */
     public function destroy(int $staffId): Response
     {
-        $this->repository->remove($staffId);
+        $this->commandBus->execute(new RemoveStaffRequest($staffId));
 
         return $this->response();
     }

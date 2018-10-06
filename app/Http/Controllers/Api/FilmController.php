@@ -4,30 +4,26 @@ namespace Sakila\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Sakila\Command\Bus\CommandBus;
-use Sakila\Domain\Film\Commands\AddFilmCommand;
-use Sakila\Domain\Film\Commands\UpdateFilmCommand;
-use Sakila\Domain\Film\Repository\FilmRepository;
-use Sakila\Transformer\FilmTransformer;
-use Sakila\Transformer\Transformer;
+use Sakila\Domain\Film\Service\Request\AddFilmRequest;
+use Sakila\Domain\Film\Service\Request\RemoveFilmRequest;
+use Sakila\Domain\Film\Service\Request\ShowFilmRequest;
+use Sakila\Domain\Film\Service\Request\ShowFilmsRequest;
+use Sakila\Domain\Film\Service\Request\UpdateFilmRequest;
 
 class FilmController extends AbstractController
 {
     /**
-     * @var \Sakila\Domain\Film\Repository\FilmRepository
+     * @var \Sakila\Command\Bus\CommandBus
      */
-    private $repository;
+    private $commandBus;
 
     /**
-     * @param \Sakila\Domain\Film\Repository\FilmRepository $repository
-     * @param \Sakila\Transformer\Transformer               $transformer
+     * @param \Sakila\Command\Bus\CommandBus $commandBus
      */
-    public function __construct(FilmRepository $repository, Transformer $transformer)
+    public function __construct(CommandBus $commandBus)
     {
-        $this->repository = $repository;
-
-        parent::__construct($transformer);
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -37,9 +33,9 @@ class FilmController extends AbstractController
      */
     public function show(int $filmId): Response
     {
-        $film = $this->repository->get($filmId);
+        $film = $this->commandBus->execute(new ShowFilmRequest($filmId));
 
-        return $this->response($this->item($film, FilmTransformer::class));
+        return $this->response($film);
     }
 
     /**
@@ -49,41 +45,36 @@ class FilmController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $page     = (int)$request->query('page', 1);
-        $pageSize = (int)$request->query('page_size', 15);
-        $items    = $this->repository->all($page, $pageSize);
-        $total    = $this->repository->count();
-        $films    = new LengthAwarePaginator($items, $total, $pageSize, $page);
+        $page     = (int)$request->query('page', self::DEFAULT_PAGE);
+        $pageSize = (int)$request->query('page_size', self::DEFAULT_PAGE_SIZE);
+        $films    = $this->commandBus->execute(new ShowFilmsRequest($page, $pageSize));
 
-        return $this->response($this->collection($films, FilmTransformer::class));
+        return $this->response($films);
     }
 
     /**
-     * @param \Illuminate\Http\Request       $request
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, CommandBus $commandBus): Response
+    public function store(Request $request): Response
     {
-        $film = $commandBus->execute(new AddFilmCommand($request->post()));
+        $film = $this->commandBus->execute(new AddFilmRequest($request->post()));
 
-        return $this->response($this->item($film, FilmTransformer::class), Response::HTTP_CREATED);
+        return $this->response($film, Response::HTTP_CREATED);
     }
 
     /**
-     * @param int                            $filmId
-     * @param \Illuminate\Http\Request       $request
-     *
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param int                      $filmId
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(int $filmId, Request $request, CommandBus $commandBus): Response
+    public function update(int $filmId, Request $request): Response
     {
-        $film = $commandBus->execute(new UpdateFilmCommand($filmId, $request->post()));
+        $film = $this->commandBus->execute(new UpdateFilmRequest($filmId, $request->post()));
 
-        return $this->response($this->item($film, FilmTransformer::class));
+        return $this->response($film);
     }
 
     /**
@@ -93,7 +84,7 @@ class FilmController extends AbstractController
      */
     public function destroy(int $filmId): Response
     {
-        $this->repository->remove($filmId);
+        $this->commandBus->execute(new RemoveFilmRequest($filmId));
 
         return $this->response();
     }

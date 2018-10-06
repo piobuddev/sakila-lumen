@@ -4,30 +4,26 @@ namespace Sakila\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Sakila\Command\Bus\CommandBus;
-use Sakila\Domain\City\Commands\AddCityCommand;
-use Sakila\Domain\City\Commands\UpdateCityCommand;
-use Sakila\Domain\City\Repository\CityRepository;
-use Sakila\Transformer\CityTransformer;
-use Sakila\Transformer\Transformer;
+use Sakila\Domain\City\Service\Request\AddCityRequest;
+use Sakila\Domain\City\Service\Request\RemoveCityRequest;
+use Sakila\Domain\City\Service\Request\ShowCitiesRequest;
+use Sakila\Domain\City\Service\Request\ShowCityRequest;
+use Sakila\Domain\City\Service\Request\UpdateCityRequest;
 
 class CityController extends AbstractController
 {
     /**
-     * @var \Sakila\Domain\City\Repository\CityRepository
+     * @var \Sakila\Command\Bus\CommandBus
      */
-    private $repository;
+    private $commandBus;
 
     /**
-     * @param \Sakila\Domain\City\Repository\CityRepository $repository
-     * @param \Sakila\Transformer\Transformer               $transformer
+     * @param \Sakila\Command\Bus\CommandBus $commandBus
      */
-    public function __construct(CityRepository $repository, Transformer $transformer)
+    public function __construct(CommandBus $commandBus)
     {
-        $this->repository = $repository;
-
-        parent::__construct($transformer);
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -37,9 +33,9 @@ class CityController extends AbstractController
      */
     public function show(int $cityId): Response
     {
-        $city = $this->repository->get($cityId);
+        $city = $this->commandBus->execute(new ShowCityRequest($cityId));
 
-        return $this->response($this->item($city, CityTransformer::class));
+        return $this->response($city);
     }
 
     /**
@@ -49,41 +45,36 @@ class CityController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $page     = (int)$request->query('page', 1);
-        $pageSize = (int)$request->query('page_size', 15);
-        $items    = $this->repository->all($page, $pageSize);
-        $total    = $this->repository->count();
-        $cities   = new LengthAwarePaginator($items, $total, $pageSize, $page);
+        $page     = (int)$request->query('page', self::DEFAULT_PAGE);
+        $pageSize = (int)$request->query('page_size', self::DEFAULT_PAGE_SIZE);
+        $cities   = $this->commandBus->execute(new ShowCitiesRequest($page, $pageSize));
 
-        return $this->response($this->collection($cities, CityTransformer::class));
+        return $this->response($cities);
     }
 
     /**
-     * @param \Illuminate\Http\Request       $request
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, CommandBus $commandBus): Response
+    public function store(Request $request): Response
     {
-        $city = $commandBus->execute(new AddCityCommand($request->post()));
+        $city = $this->commandBus->execute(new AddCityRequest($request->post()));
 
-        return $this->response($this->item($city, CityTransformer::class), Response::HTTP_CREATED);
+        return $this->response($city, Response::HTTP_CREATED);
     }
 
     /**
-     * @param int                            $cityId
-     * @param \Illuminate\Http\Request       $request
-     *
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param int                      $cityId
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(int $cityId, Request $request, CommandBus $commandBus): Response
+    public function update(int $cityId, Request $request): Response
     {
-        $city = $commandBus->execute(new UpdateCityCommand($cityId, $request->post()));
+        $city = $this->commandBus->execute(new UpdateCityRequest($cityId, $request->post()));
 
-        return $this->response($this->item($city, CityTransformer::class));
+        return $this->response($city);
     }
 
     /**
@@ -93,7 +84,7 @@ class CityController extends AbstractController
      */
     public function destroy(int $cityId): Response
     {
-        $this->repository->remove($cityId);
+        $this->commandBus->execute(new RemoveCityRequest($cityId));
 
         return $this->response();
     }

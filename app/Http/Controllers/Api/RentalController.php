@@ -4,30 +4,26 @@ namespace Sakila\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Sakila\Command\Bus\CommandBus;
-use Sakila\Domain\Rental\Commands\AddRentalCommand;
-use Sakila\Domain\Rental\Commands\UpdateRentalCommand;
-use Sakila\Domain\Rental\Repository\RentalRepository;
-use Sakila\Transformer\RentalTransformer;
-use Sakila\Transformer\Transformer;
+use Sakila\Domain\Rental\Service\Request\AddRentalRequest;
+use Sakila\Domain\Rental\Service\Request\RemoveRentalRequest;
+use Sakila\Domain\Rental\Service\Request\ShowRentalRequest;
+use Sakila\Domain\Rental\Service\Request\ShowRentalsRequest;
+use Sakila\Domain\Rental\Service\Request\UpdateRentalRequest;
 
 class RentalController extends AbstractController
 {
     /**
-     * @var \Sakila\Domain\Rental\Repository\RentalRepository
+     * @var \Sakila\Command\Bus\CommandBus
      */
-    private $repository;
+    private $commandBus;
 
     /**
-     * @param \Sakila\Domain\Rental\Repository\RentalRepository $repository
-     * @param \Sakila\Transformer\Transformer                   $transformer
+     * @param \Sakila\Command\Bus\CommandBus $commandBus
      */
-    public function __construct(RentalRepository $repository, Transformer $transformer)
+    public function __construct(CommandBus $commandBus)
     {
-        $this->repository = $repository;
-
-        parent::__construct($transformer);
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -37,9 +33,9 @@ class RentalController extends AbstractController
      */
     public function show(int $rentalId): Response
     {
-        $rental = $this->repository->get($rentalId);
+        $rental = $this->commandBus->execute(new ShowRentalRequest($rentalId));
 
-        return $this->response($this->item($rental, RentalTransformer::class));
+        return $this->response($rental);
     }
 
     /**
@@ -49,41 +45,36 @@ class RentalController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $page     = (int)$request->query('page', 1);
-        $pageSize = (int)$request->query('page_size', 15);
-        $items    = $this->repository->all($page, $pageSize);
-        $total    = $this->repository->count();
-        $rentals  = new LengthAwarePaginator($items, $total, $pageSize, $page);
+        $page     = (int)$request->query('page', self::DEFAULT_PAGE);
+        $pageSize = (int)$request->query('page_size', self::DEFAULT_PAGE_SIZE);
+        $rentals  = $this->commandBus->execute(new ShowRentalsRequest($page, $pageSize));
 
-        return $this->response($this->collection($rentals, RentalTransformer::class));
+        return $this->response($rentals);
     }
 
     /**
-     * @param \Illuminate\Http\Request       $request
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, CommandBus $commandBus): Response
+    public function store(Request $request): Response
     {
-        $rental = $commandBus->execute(new AddRentalCommand($request->post()));
+        $rental = $this->commandBus->execute(new AddRentalRequest($request->post()));
 
-        return $this->response($this->item($rental, RentalTransformer::class), Response::HTTP_CREATED);
+        return $this->response($rental, Response::HTTP_CREATED);
     }
 
     /**
-     * @param int                            $rentalId
-     * @param \Illuminate\Http\Request       $request
-     *
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param int                      $rentalId
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(int $rentalId, Request $request, CommandBus $commandBus): Response
+    public function update(int $rentalId, Request $request): Response
     {
-        $rental = $commandBus->execute(new UpdateRentalCommand($rentalId, $request->post()));
+        $rental = $this->commandBus->execute(new UpdateRentalRequest($rentalId, $request->post()));
 
-        return $this->response($this->item($rental, RentalTransformer::class));
+        return $this->response($rental);
     }
 
     /**
@@ -93,7 +84,7 @@ class RentalController extends AbstractController
      */
     public function destroy(int $rentalId): Response
     {
-        $this->repository->remove($rentalId);
+        $this->commandBus->execute(new RemoveRentalRequest($rentalId));
 
         return $this->response();
     }

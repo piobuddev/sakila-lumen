@@ -4,30 +4,26 @@ namespace Sakila\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Sakila\Command\Bus\CommandBus;
-use Sakila\Domain\Inventory\Commands\AddInventoryCommand;
-use Sakila\Domain\Inventory\Commands\UpdateInventoryCommand;
-use Sakila\Domain\Inventory\Repository\InventoryRepository;
-use Sakila\Transformer\InventoryTransformer;
-use Sakila\Transformer\Transformer;
+use Sakila\Domain\Inventory\Service\Request\AddInventoryRequest;
+use Sakila\Domain\Inventory\Service\Request\RemoveInventoryRequest;
+use Sakila\Domain\Inventory\Service\Request\ShowInventoriesRequest;
+use Sakila\Domain\Inventory\Service\Request\ShowInventoryRequest;
+use Sakila\Domain\Inventory\Service\Request\UpdateInventoryRequest;
 
 class InventoryController extends AbstractController
 {
     /**
-     * @var \Sakila\Domain\Inventory\Repository\InventoryRepository
+     * @var \Sakila\Command\Bus\CommandBus
      */
-    private $repository;
+    private $commandBus;
 
     /**
-     * @param \Sakila\Domain\Inventory\Repository\InventoryRepository $repository
-     * @param \Sakila\Transformer\Transformer                         $transformer
+     * @param \Sakila\Command\Bus\CommandBus $commandBus
      */
-    public function __construct(InventoryRepository $repository, Transformer $transformer)
+    public function __construct(CommandBus $commandBus)
     {
-        $this->repository = $repository;
-
-        parent::__construct($transformer);
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -37,9 +33,9 @@ class InventoryController extends AbstractController
      */
     public function show(int $inventoryId): Response
     {
-        $inventory = $this->repository->get($inventoryId);
+        $inventory = $this->commandBus->execute(new ShowInventoryRequest($inventoryId));
 
-        return $this->response($this->item($inventory, InventoryTransformer::class));
+        return $this->response($inventory);
     }
 
     /**
@@ -49,41 +45,36 @@ class InventoryController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $page      = (int)$request->query('page', 1);
-        $pageSize  = (int)$request->query('page_size', 15);
-        $items     = $this->repository->all($page, $pageSize);
-        $total     = $this->repository->count();
-        $inventory = new LengthAwarePaginator($items, $total, $pageSize, $page);
+        $page        = (int)$request->query('page', self::DEFAULT_PAGE);
+        $pageSize    = (int)$request->query('page_size', self::DEFAULT_PAGE_SIZE);
+        $inventories = $this->commandBus->execute(new ShowInventoriesRequest($page, $pageSize));
 
-        return $this->response($this->collection($inventory, InventoryTransformer::class));
+        return $this->response($inventories);
     }
 
     /**
-     * @param \Illuminate\Http\Request       $request
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, CommandBus $commandBus): Response
+    public function store(Request $request): Response
     {
-        $inventory = $commandBus->execute(new AddInventoryCommand($request->post()));
+        $inventory = $this->commandBus->execute(new AddInventoryRequest($request->post()));
 
-        return $this->response($this->item($inventory, InventoryTransformer::class), Response::HTTP_CREATED);
+        return $this->response($inventory, Response::HTTP_CREATED);
     }
 
     /**
-     * @param int                            $inventoryId
-     * @param \Illuminate\Http\Request       $request
-     *
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param int                      $inventoryId
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(int $inventoryId, Request $request, CommandBus $commandBus): Response
+    public function update(int $inventoryId, Request $request): Response
     {
-        $inventory = $commandBus->execute(new UpdateInventoryCommand($inventoryId, $request->post()));
+        $inventory = $this->commandBus->execute(new UpdateInventoryRequest($inventoryId, $request->post()));
 
-        return $this->response($this->item($inventory, InventoryTransformer::class));
+        return $this->response($inventory);
     }
 
     /**
@@ -93,7 +84,7 @@ class InventoryController extends AbstractController
      */
     public function destroy(int $inventoryId): Response
     {
-        $this->repository->remove($inventoryId);
+        $this->commandBus->execute(new RemoveInventoryRequest($inventoryId));
 
         return $this->response();
     }

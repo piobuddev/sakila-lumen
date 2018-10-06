@@ -4,30 +4,26 @@ namespace Sakila\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Sakila\Command\Bus\CommandBus;
-use Sakila\Domain\Address\Commands\AddAddressCommand;
-use Sakila\Domain\Address\Commands\UpdateAddressCommand;
-use Sakila\Domain\Address\Repository\AddressRepository;
-use Sakila\Transformer\AddressTransformer;
-use Sakila\Transformer\Transformer;
+use Sakila\Domain\Address\Service\Request\AddAddressRequest;
+use Sakila\Domain\Address\Service\Request\RemoveAddressRequest;
+use Sakila\Domain\Address\Service\Request\ShowAddressesRequest;
+use Sakila\Domain\Address\Service\Request\ShowAddressRequest;
+use Sakila\Domain\Address\Service\Request\UpdateAddressRequest;
 
 class AddressController extends AbstractController
 {
     /**
-     * @var \Sakila\Domain\Address\Repository\AddressRepository
+     * @var \Sakila\Command\Bus\CommandBus
      */
-    private $repository;
+    private $commandBus;
 
     /**
-     * @param \Sakila\Domain\Address\Repository\AddressRepository $repository
-     * @param \Sakila\Transformer\Transformer                     $transformer
+     * @param \Sakila\Command\Bus\CommandBus $commandBus
      */
-    public function __construct(AddressRepository $repository, Transformer $transformer)
+    public function __construct(CommandBus $commandBus)
     {
-        $this->repository = $repository;
-
-        parent::__construct($transformer);
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -37,9 +33,9 @@ class AddressController extends AbstractController
      */
     public function show(int $addressId): Response
     {
-        $address = $this->repository->get($addressId);
+        $address = $this->commandBus->execute(new ShowAddressRequest($addressId));
 
-        return $this->response($this->item($address, AddressTransformer::class));
+        return $this->response($address);
     }
 
     /**
@@ -49,41 +45,36 @@ class AddressController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $page      = (int)$request->query('page', 1);
-        $pageSize  = (int)$request->query('page_size', 15);
-        $items     = $this->repository->all($page, $pageSize);
-        $total     = $this->repository->count();
-        $addresses = new LengthAwarePaginator($items, $total, $pageSize, $page);
+        $page      = (int)$request->query('page', self::DEFAULT_PAGE);
+        $pageSize  = (int)$request->query('page_size', self::DEFAULT_PAGE_SIZE);
+        $addresses = $this->commandBus->execute(new ShowAddressesRequest($page, $pageSize));
 
-        return $this->response($this->collection($addresses, AddressTransformer::class));
+        return $this->response($addresses);
     }
 
     /**
-     * @param \Illuminate\Http\Request       $request
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, CommandBus $commandBus): Response
+    public function store(Request $request): Response
     {
-        $address = $commandBus->execute(new AddAddressCommand($request->post()));
+        $address = $this->commandBus->execute(new AddAddressRequest($request->post()));
 
-        return $this->response($this->item($address, AddressTransformer::class), Response::HTTP_CREATED);
+        return $this->response($address, Response::HTTP_CREATED);
     }
 
     /**
-     * @param int                            $addressId
-     * @param \Illuminate\Http\Request       $request
-     *
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param int                      $addressId
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(int $addressId, Request $request, CommandBus $commandBus): Response
+    public function update(int $addressId, Request $request): Response
     {
-        $address = $commandBus->execute(new UpdateAddressCommand($addressId, $request->post()));
+        $address = $this->commandBus->execute(new UpdateAddressRequest($addressId, $request->post()));
 
-        return $this->response($this->item($address, AddressTransformer::class));
+        return $this->response($address);
     }
 
     /**
@@ -93,7 +84,7 @@ class AddressController extends AbstractController
      */
     public function destroy(int $addressId): Response
     {
-        $this->repository->remove($addressId);
+        $this->commandBus->execute(new RemoveAddressRequest($addressId));
 
         return $this->response();
     }

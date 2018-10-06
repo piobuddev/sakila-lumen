@@ -4,30 +4,26 @@ namespace Sakila\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Sakila\Command\Bus\CommandBus;
-use Sakila\Domain\Store\Commands\AddStoreCommand;
-use Sakila\Domain\Store\Commands\UpdateStoreCommand;
-use Sakila\Domain\Store\Repository\StoreRepository;
-use Sakila\Transformer\StoreTransformer;
-use Sakila\Transformer\Transformer;
+use Sakila\Domain\Store\Service\Request\AddStoreRequest;
+use Sakila\Domain\Store\Service\Request\RemoveStoreRequest;
+use Sakila\Domain\Store\Service\Request\ShowStoreRequest;
+use Sakila\Domain\Store\Service\Request\ShowStoresRequest;
+use Sakila\Domain\Store\Service\Request\UpdateStoreRequest;
 
 class StoreController extends AbstractController
 {
     /**
-     * @var \Sakila\Domain\Store\Repository\StoreRepository
+     * @var \Sakila\Command\Bus\CommandBus
      */
-    private $repository;
+    private $commandBus;
 
     /**
-     * @param \Sakila\Domain\Store\Repository\StoreRepository $repository
-     * @param \Sakila\Transformer\Transformer                 $transformer
+     * @param \Sakila\Command\Bus\CommandBus $commandBus
      */
-    public function __construct(StoreRepository $repository, Transformer $transformer)
+    public function __construct(CommandBus $commandBus)
     {
-        $this->repository = $repository;
-
-        parent::__construct($transformer);
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -37,9 +33,9 @@ class StoreController extends AbstractController
      */
     public function show(int $storeId): Response
     {
-        $store = $this->repository->get($storeId);
+        $store = $this->commandBus->execute(new ShowStoreRequest($storeId));
 
-        return $this->response($this->item($store, StoreTransformer::class));
+        return $this->response($store);
     }
 
     /**
@@ -49,41 +45,36 @@ class StoreController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $page     = (int)$request->query('page', 1);
-        $pageSize = (int)$request->query('page_size', 15);
-        $items    = $this->repository->all($page, $pageSize);
-        $total    = $this->repository->count();
-        $stores   = new LengthAwarePaginator($items, $total, $pageSize, $page);
+        $page     = (int)$request->query('page', self::DEFAULT_PAGE);
+        $pageSize = (int)$request->query('page_size', self::DEFAULT_PAGE_SIZE);
+        $stores   = $this->commandBus->execute(new ShowStoresRequest($page, $pageSize));
 
-        return $this->response($this->collection($stores, StoreTransformer::class));
+        return $this->response($stores);
     }
 
     /**
-     * @param \Illuminate\Http\Request       $request
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, CommandBus $commandBus): Response
+    public function store(Request $request): Response
     {
-        $store = $commandBus->execute(new AddStoreCommand($request->post()));
+        $store = $this->commandBus->execute(new AddStoreRequest($request->post()));
 
-        return $this->response($this->item($store, StoreTransformer::class), Response::HTTP_CREATED);
+        return $this->response($store, Response::HTTP_CREATED);
     }
 
     /**
-     * @param int                            $storeId
-     * @param \Illuminate\Http\Request       $request
-     *
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param int                      $storeId
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(int $storeId, Request $request, CommandBus $commandBus): Response
+    public function update(int $storeId, Request $request): Response
     {
-        $store = $commandBus->execute(new UpdateStoreCommand($storeId, $request->post()));
+        $store = $this->commandBus->execute(new UpdateStoreRequest($storeId, $request->post()));
 
-        return $this->response($this->item($store, StoreTransformer::class));
+        return $this->response($store);
     }
 
     /**
@@ -93,7 +84,7 @@ class StoreController extends AbstractController
      */
     public function destroy(int $storeId): Response
     {
-        $this->repository->remove($storeId);
+        $this->commandBus->execute(new RemoveStoreRequest($storeId));
 
         return $this->response();
     }

@@ -4,30 +4,26 @@ namespace Sakila\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Sakila\Command\Bus\CommandBus;
-use Sakila\Domain\Language\Commands\AddLanguageCommand;
-use Sakila\Domain\Language\Commands\UpdateLanguageCommand;
-use Sakila\Domain\Language\Repository\LanguageRepository;
-use Sakila\Transformer\LanguageTransformer;
-use Sakila\Transformer\Transformer;
+use Sakila\Domain\Language\Service\Request\AddLanguageRequest;
+use Sakila\Domain\Language\Service\Request\RemoveLanguageRequest;
+use Sakila\Domain\Language\Service\Request\ShowLanguageRequest;
+use Sakila\Domain\Language\Service\Request\ShowLanguagesRequest;
+use Sakila\Domain\Language\Service\Request\UpdateLanguageRequest;
 
 class LanguageController extends AbstractController
 {
     /**
-     * @var \Sakila\Domain\Language\Repository\LanguageRepository
+     * @var \Sakila\Command\Bus\CommandBus
      */
-    private $repository;
+    private $commandBus;
 
     /**
-     * @param \Sakila\Domain\Language\Repository\LanguageRepository $repository
-     * @param \Sakila\Transformer\Transformer                       $transformer
+     * @param \Sakila\Command\Bus\CommandBus $commandBus
      */
-    public function __construct(LanguageRepository $repository, Transformer $transformer)
+    public function __construct(CommandBus $commandBus)
     {
-        $this->repository = $repository;
-
-        parent::__construct($transformer);
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -37,9 +33,9 @@ class LanguageController extends AbstractController
      */
     public function show(int $languageId): Response
     {
-        $language = $this->repository->get($languageId);
+        $language = $this->commandBus->execute(new ShowLanguageRequest($languageId));
 
-        return $this->response($this->item($language, LanguageTransformer::class));
+        return $this->response($language);
     }
 
     /**
@@ -49,41 +45,36 @@ class LanguageController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $page      = (int)$request->query('page', 1);
-        $pageSize  = (int)$request->query('page_size', 15);
-        $items     = $this->repository->all($page, $pageSize);
-        $total     = $this->repository->count();
-        $languages = new LengthAwarePaginator($items, $total, $pageSize, $page);
+        $page      = (int)$request->query('page', self::DEFAULT_PAGE);
+        $pageSize  = (int)$request->query('page_size', self::DEFAULT_PAGE_SIZE);
+        $languages = $this->commandBus->execute(new ShowLanguagesRequest($page, $pageSize));
 
-        return $this->response($this->collection($languages, LanguageTransformer::class));
+        return $this->response($languages);
     }
 
     /**
-     * @param \Illuminate\Http\Request       $request
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, CommandBus $commandBus): Response
+    public function store(Request $request): Response
     {
-        $language = $commandBus->execute(new AddLanguageCommand($request->post()));
+        $language = $this->commandBus->execute(new AddLanguageRequest($request->post()));
 
-        return $this->response($this->item($language, LanguageTransformer::class), Response::HTTP_CREATED);
+        return $this->response($language, Response::HTTP_CREATED);
     }
 
     /**
-     * @param int                            $languageId
-     * @param \Illuminate\Http\Request       $request
-     *
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param int                      $languageId
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(int $languageId, Request $request, CommandBus $commandBus): Response
+    public function update(int $languageId, Request $request): Response
     {
-        $language = $commandBus->execute(new UpdateLanguageCommand($languageId, $request->post()));
+        $language = $this->commandBus->execute(new UpdateLanguageRequest($languageId, $request->post()));
 
-        return $this->response($this->item($language, LanguageTransformer::class));
+        return $this->response($language);
     }
 
     /**
@@ -93,7 +84,7 @@ class LanguageController extends AbstractController
      */
     public function destroy(int $languageId): Response
     {
-        $this->repository->remove($languageId);
+        $this->commandBus->execute(new RemoveLanguageRequest($languageId));
 
         return $this->response();
     }

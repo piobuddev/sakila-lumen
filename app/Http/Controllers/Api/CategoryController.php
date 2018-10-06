@@ -4,30 +4,26 @@ namespace Sakila\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Sakila\Command\Bus\CommandBus;
-use Sakila\Domain\Category\Commands\AddCategoryCommand;
-use Sakila\Domain\Category\Commands\UpdateCategoryCommand;
-use Sakila\Domain\Category\Repository\CategoryRepository;
-use Sakila\Transformer\CategoryTransformer;
-use Sakila\Transformer\Transformer;
+use Sakila\Domain\Category\Service\Request\AddCategoryRequest;
+use Sakila\Domain\Category\Service\Request\RemoveCategoryRequest;
+use Sakila\Domain\Category\Service\Request\ShowCategoriesRequest;
+use Sakila\Domain\Category\Service\Request\ShowCategoryRequest;
+use Sakila\Domain\Category\Service\Request\UpdateCategoryRequest;
 
 class CategoryController extends AbstractController
 {
     /**
-     * @var \Sakila\Domain\Category\Repository\CategoryRepository
+     * @var \Sakila\Command\Bus\CommandBus
      */
-    private $repository;
+    private $commandBus;
 
     /**
-     * @param \Sakila\Domain\Category\Repository\CategoryRepository $repository
-     * @param \Sakila\Transformer\Transformer                       $transformer
+     * @param \Sakila\Command\Bus\CommandBus $commandBus
      */
-    public function __construct(CategoryRepository $repository, Transformer $transformer)
+    public function __construct(CommandBus $commandBus)
     {
-        $this->repository = $repository;
-
-        parent::__construct($transformer);
+        $this->commandBus = $commandBus;
     }
 
     /**
@@ -37,9 +33,9 @@ class CategoryController extends AbstractController
      */
     public function show(int $categoryId): Response
     {
-        $category = $this->repository->get($categoryId);
+        $category = $this->commandBus->execute(new ShowCategoryRequest($categoryId));
 
-        return $this->response($this->item($category, CategoryTransformer::class));
+        return $this->response($category);
     }
 
     /**
@@ -49,41 +45,36 @@ class CategoryController extends AbstractController
      */
     public function index(Request $request): Response
     {
-        $page       = (int)$request->query('page', 1);
-        $pageSize   = (int)$request->query('page_size', 15);
-        $items      = $this->repository->all($page, $pageSize);
-        $total      = $this->repository->count();
-        $categories = new LengthAwarePaginator($items, $total, $pageSize, $page);
+        $page       = (int)$request->query('page', self::DEFAULT_PAGE);
+        $pageSize   = (int)$request->query('page_size', self::DEFAULT_PAGE_SIZE);
+        $categories = $this->commandBus->execute(new ShowCategoriesRequest($page, $pageSize));
 
-        return $this->response($this->collection($categories, CategoryTransformer::class));
+        return $this->response($categories);
     }
 
     /**
-     * @param \Illuminate\Http\Request       $request
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request, CommandBus $commandBus): Response
+    public function store(Request $request): Response
     {
-        $category = $commandBus->execute(new AddCategoryCommand($request->post()));
+        $category = $this->commandBus->execute(new AddCategoryRequest($request->post()));
 
-        return $this->response($this->item($category, CategoryTransformer::class), Response::HTTP_CREATED);
+        return $this->response($category, Response::HTTP_CREATED);
     }
 
     /**
-     * @param int                            $categoryId
-     * @param \Illuminate\Http\Request       $request
-     *
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param int                      $categoryId
+     * @param \Illuminate\Http\Request $request
      *
      * @return \Illuminate\Http\Response
      */
-    public function update(int $categoryId, Request $request, CommandBus $commandBus): Response
+    public function update(int $categoryId, Request $request): Response
     {
-        $category = $commandBus->execute(new UpdateCategoryCommand($categoryId, $request->post()));
+        $category = $this->commandBus->execute(new UpdateCategoryRequest($categoryId, $request->post()));
 
-        return $this->response($this->item($category, CategoryTransformer::class));
+        return $this->response($category);
     }
 
     /**
@@ -93,7 +84,7 @@ class CategoryController extends AbstractController
      */
     public function destroy(int $categoryId): Response
     {
-        $this->repository->remove($categoryId);
+        $this->commandBus->execute(new RemoveCategoryRequest($categoryId));
 
         return $this->response();
     }
