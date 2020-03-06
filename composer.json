@@ -12,15 +12,19 @@
   "repositories": [
     {
       "type": "path",
-      "url": "/home/vagrant/sakila/sakila"
+      "url": "/code/sakila"
     },
     {
       "type": "path",
-      "url": "/home/vagrant/Code/behat-webapi-extension"
+      "url": "/code/behat-webapi-extension"
     },
     {
       "type": "path",
-      "url": "/home/vagrant/sakila/repository-tester"
+      "url": "/code/repository-tester"
+    },
+    {
+      "type": "git",
+      "url": "https://github.com/piobuddev/repository-tester.git"
     }
   ],
   "require": {
@@ -39,7 +43,7 @@
     "piobuddev/behat-webapi-extension": "*",
     "phpstan/phpstan": "^0.8.5",
     "squizlabs/php_codesniffer": "*",
-    "piobuddev/repository-tester": "*",
+    "piobuddev/repository-tester": "^1.0",
     "limedeck/phpunit-detailed-printer": "^3.1"
   },
   "autoload-dev": {
@@ -64,6 +68,5 @@
       "phpunit --stop-on-failure"
     ]
   },
-  "prefer-stable": true,
-  "optimize-autoloader": true
+  "prefer-stable": true
 }

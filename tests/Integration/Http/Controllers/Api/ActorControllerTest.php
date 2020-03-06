@@ -3,11 +3,10 @@
 namespace Sakila\Test\Http\Controllers\Api;
 
 use Illuminate\Http\Response;
-use Sakila\Domain\Actor\Repository\ActorRepository;
+use Sakila\Command\Bus\CommandBus;
 use Sakila\Exceptions\Database\NotFoundException;
 use Sakila\Http\Controllers\Api\ActorController;
 use Sakila\Test\BaseIntegrationTestCase;
-use Sakila\Transformer\Transformer;
 
 class ActorControllerTest extends BaseIntegrationTestCase
 {
@@ -24,9 +23,8 @@ class ActorControllerTest extends BaseIntegrationTestCase
 
         $this->add('actor', 1, ['actor_id' => self::ACTOR_ID]);
 
-        $repository    = $this->app->make(ActorRepository::class);
-        $transformer   = $this->app->make(Transformer::class);
-        $this->cut     = new ActorController($repository, $transformer);
+        $commandBus = $this->app->get(CommandBus::class);
+        $this->cut = new ActorController($commandBus);
     }
 
     public function testRequestObjectIsReturnedWhenCallingShowActor()
@@ -42,12 +40,12 @@ class ActorControllerTest extends BaseIntegrationTestCase
     public function testReturnsAnActorForSpecifiedId()
     {
         $actors = $this->add('actor', 10);
-        $actor  = $actors[5];
+        $actor = $actors[5];
 
         unset($actor['last_update']);
 
         $response = $this->cut->show((int)$actor['actor_id']);
-        $content  = json_decode($response->content(), true);
+        $content = json_decode($response->content(), true);
 
         $this->assertEquals($actor['actor_id'], $content['actorId']);
         $this->assertEquals($actor['first_name'], $content['firstName']);
