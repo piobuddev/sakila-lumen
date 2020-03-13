@@ -79,7 +79,7 @@ Please read [CONTRIBUTING.md](https://gist.github.com/piobuddev/c04b7341f68da971
 
 ## Versioning
 
-I use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/piobuddev/behat-webapi-extension/tags). 
+I use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/piobuddev/sakila-lumen/tags). 
 
 ## Authors
 
@@ -87,4 +87,4 @@ I use [SemVer](http://semver.org/) for versioning. For the versions available, s
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/piobuddev/repository-tester/blob/master/LICENSE.md) file for details
+This project is licensed under the MIT License - see the [LICENSE.md](https://github.com/piobuddev/sakila-lumen/blob/master/LICENSE.md) file for details
