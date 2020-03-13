@@ -2,22 +2,6 @@
 
 CRUD API for the MySql "Sakila" database schema build with Lumen micro-framework by Laravel, domain logic based in separate project `piobuddev/sakila`
 
-## Usage
-In your `composer.json` file:
-```json
-    {
-        "repositories": [
-            {
-                "type": "git",
-                "url": "https://github.com/piobuddev/sakila-lumen.git"
-            }
-        ],
-        "require-dev": {
-            "piobuddev/sakila": "*"
-        }
-    }
-```
-
 ## Development setup:
 ### Getting Started
 
@@ -34,8 +18,17 @@ To get the development environment running clone the repository and run the comp
 ```sh
 $ git clone git@github.com:piobuddev/sakila-lumen.git
 $ cd sakila-lumen/
+$ cp .env.example .env
 $ composer install
 ```
+
+```sh
+$ echo `127.0.0.1    sakila-lumen.local`
+```
+
+Update `.env` and `.env_testing` with DB connection details
+
+Swagger documentation available at `https://sakila-lumen.local/docs`
 
 ## Running the tests
 
@@ -69,9 +62,16 @@ Additionaly you can fix code formatting with:
 $ vendor/bin/phpcbf --standard=PSR2 --extensions=php --colors --severity=1 src
 ```
 
+## Built With
+* [Lumen](https://lumen.laravel.com/) The stunningly fast micro-framework by Laravel
+* [Fractal](https://fractal.thephpleague.com/) - A presentation and transformation layer for complex data output
+* [piobuddev/sakila](https://github.com/piobuddev/sakila) - Domain logic
+* [piobuddev/repository-tester](https://github.com/piobuddev/repository-tester) - Helper that provides a simple api to create a fake data and perform a database operations.
+* [piobuddev/behat-webapi-extension](https://github.com/piobuddev/behat-webapi-extension) -  Web Api extension for Behat helps with performing http requests and interacting with a database.
+
+
 ## Code Style
 * [PSR2](https://www.php-fig.org/psr/psr-2/)
-
 
 ## Contributing
 
