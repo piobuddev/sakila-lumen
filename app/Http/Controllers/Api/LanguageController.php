@@ -59,7 +59,7 @@ class LanguageController extends AbstractController
      */
     public function store(Request $request): Response
     {
-        $language = $this->commandBus->execute(new AddLanguageRequest($request->post()));
+        $language = $this->commandBus->execute(new AddLanguageRequest((array)$request->post()));
 
         return $this->response($language, Response::HTTP_CREATED);
     }
@@ -72,7 +72,7 @@ class LanguageController extends AbstractController
      */
     public function update(int $languageId, Request $request): Response
     {
-        $language = $this->commandBus->execute(new UpdateLanguageRequest($languageId, $request->post()));
+        $language = $this->commandBus->execute(new UpdateLanguageRequest($languageId, (array)$request->post()));
 
         return $this->response($language);
     }

@@ -59,7 +59,7 @@ class AddressController extends AbstractController
      */
     public function store(Request $request): Response
     {
-        $address = $this->commandBus->execute(new AddAddressRequest($request->post()));
+        $address = $this->commandBus->execute(new AddAddressRequest((array)$request->post()));
 
         return $this->response($address, Response::HTTP_CREATED);
     }
@@ -72,7 +72,7 @@ class AddressController extends AbstractController
      */
     public function update(int $addressId, Request $request): Response
     {
-        $address = $this->commandBus->execute(new UpdateAddressRequest($addressId, $request->post()));
+        $address = $this->commandBus->execute(new UpdateAddressRequest($addressId, (array)$request->post()));
 
         return $this->response($address);
     }

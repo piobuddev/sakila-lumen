@@ -46,7 +46,7 @@ class RepositoryAwareTestListener implements TestListener
     /**
      * @param \PHPUnit\Framework\Test $test
      */
-    public function startTest(Test $test)
+    public function startTest(Test $test): void
     {
         if ($test instanceof RepositoryAwareInterface) {
             $this->configureDatabaseAwareTest($test);
@@ -57,7 +57,10 @@ class RepositoryAwareTestListener implements TestListener
         }
     }
 
-    public function endTestSuite(TestSuite $suite)
+    /**
+     * @param \PHPUnit\Framework\TestSuite $suite
+     */
+    public function endTestSuite(TestSuite $suite): void
     {
         $this->closeConnection();
     }

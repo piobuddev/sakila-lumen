@@ -59,7 +59,7 @@ class ActorController extends AbstractController
      */
     public function store(Request $request): Response
     {
-        $actor = $this->commandBus->execute(new AddActorRequest($request->post()));
+        $actor = $this->commandBus->execute(new AddActorRequest((array)$request->post()));
 
         return $this->response($actor, Response::HTTP_CREATED);
     }
@@ -72,7 +72,7 @@ class ActorController extends AbstractController
      */
     public function update(int $actorId, Request $request): Response
     {
-        $actor = $this->commandBus->execute(new UpdateActorRequest($actorId, $request->post()));
+        $actor = $this->commandBus->execute(new UpdateActorRequest($actorId, (array)$request->post()));
 
         return $this->response($actor);
     }

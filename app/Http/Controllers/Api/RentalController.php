@@ -59,7 +59,7 @@ class RentalController extends AbstractController
      */
     public function store(Request $request): Response
     {
-        $rental = $this->commandBus->execute(new AddRentalRequest($request->post()));
+        $rental = $this->commandBus->execute(new AddRentalRequest((array)$request->post()));
 
         return $this->response($rental, Response::HTTP_CREATED);
     }
@@ -72,7 +72,7 @@ class RentalController extends AbstractController
      */
     public function update(int $rentalId, Request $request): Response
     {
-        $rental = $this->commandBus->execute(new UpdateRentalRequest($rentalId, $request->post()));
+        $rental = $this->commandBus->execute(new UpdateRentalRequest($rentalId, (array)$request->post()));
 
         return $this->response($rental);
     }

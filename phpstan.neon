@@ -1,0 +1,5 @@
+parameters:
+  checkMissingIterableValueType: false
+  ignoreErrors:
+    - '/Cannot cast array\|string to int\./'
+    - '/Parameter #1 \$function of function call_user_func expects callable\(\): mixed, array\(Illuminate\\Bus\\Dispatcher, string\) given\./'

@@ -28,7 +28,7 @@ class BuilderTest extends BaseIntegrationTestCase
         $this->rows = $this->add(self::TABLE, 20);
     }
 
-    public function testSelectColumns()
+    public function testSelectColumns(): void
     {
         $column  = 'first_name';
         $results = $this->cut->select([$column])->from(self::TABLE)->get();
@@ -38,7 +38,7 @@ class BuilderTest extends BaseIntegrationTestCase
         $this->assertArrayHasKey($column, $result);
     }
 
-    public function testWhere()
+    public function testWhere(): void
     {
         $actor   = array_pop($this->rows);
         $results = $this->cut->from(self::TABLE)->where(['actor_id' => $actor['actor_id']])->get();
@@ -48,7 +48,7 @@ class BuilderTest extends BaseIntegrationTestCase
         $this->assertEquals($actor['last_name'], $result['last_name']);
     }
 
-    public function testOrderAsc()
+    public function testOrderAsc(): void
     {
         $results = $this->cut->from(self::TABLE)->order(['actor_id', 'ASC'])->get();
 
@@ -57,7 +57,7 @@ class BuilderTest extends BaseIntegrationTestCase
         $this->assertEquals(3, $results[2]['actor_id']);
     }
 
-    public function testOrderDesc()
+    public function testOrderDesc(): void
     {
         $results = $this->cut->from(self::TABLE)->order(['actor_id', 'DESC'])->get();
 
@@ -66,7 +66,7 @@ class BuilderTest extends BaseIntegrationTestCase
         $this->assertEquals(18, $results[2]['actor_id']);
     }
 
-    public function testLimit()
+    public function testLimit(): void
     {
         $results = $this->cut->from(self::TABLE)->limit(5)->get();
 

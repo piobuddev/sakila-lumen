@@ -59,7 +59,7 @@ class PaymentController extends AbstractController
      */
     public function store(Request $request): Response
     {
-        $payment = $this->commandBus->execute(new AddPaymentRequest($request->post()));
+        $payment = $this->commandBus->execute(new AddPaymentRequest((array)$request->post()));
 
         return $this->response($payment, Response::HTTP_CREATED);
     }
@@ -72,7 +72,7 @@ class PaymentController extends AbstractController
      */
     public function update(int $paymentId, Request $request): Response
     {
-        $payment = $this->commandBus->execute(new UpdatePaymentRequest($paymentId, $request->post()));
+        $payment = $this->commandBus->execute(new UpdatePaymentRequest($paymentId, (array)$request->post()));
 
         return $this->response($payment);
     }

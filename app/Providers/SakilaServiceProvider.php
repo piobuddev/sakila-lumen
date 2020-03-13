@@ -70,7 +70,7 @@ class SakilaServiceProvider extends ServiceProvider
      *
      * @return void
      */
-    public function register()
+    public function register(): void
     {
         $this->app->bind(NameResolver::class, SimpleNameResolver::class);
         $this->app->bind(FactoryInterface::class, IlluminateFactoryAdapter::class);
@@ -132,7 +132,7 @@ class SakilaServiceProvider extends ServiceProvider
         $this->app->bind(\Sakila\Domain\Payment\Validator\PaymentValidator::class, PaymentValidator::class);
     }
 
-    private function registerTransformers()
+    private function registerTransformers(): void
     {
         $this->app->bind(ActorTransformerInterface::class, ActorTransformer::class);
         $this->app->bind(AddressTransformerInterface::class, AddressTransformer::class);

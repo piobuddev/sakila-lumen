@@ -59,7 +59,7 @@ class StaffController extends AbstractController
      */
     public function store(Request $request): Response
     {
-        $staff = $this->commandBus->execute(new AddStaffRequest($request->post()));
+        $staff = $this->commandBus->execute(new AddStaffRequest((array)$request->post()));
 
         return $this->response($staff, Response::HTTP_CREATED);
     }
@@ -72,7 +72,7 @@ class StaffController extends AbstractController
      */
     public function update(int $staffId, Request $request): Response
     {
-        $staff = $this->commandBus->execute(new UpdateStaffRequest($staffId, $request->post()));
+        $staff = $this->commandBus->execute(new UpdateStaffRequest($staffId, (array)$request->post()));
 
         return $this->response($staff);
     }

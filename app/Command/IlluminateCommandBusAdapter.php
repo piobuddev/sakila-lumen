@@ -40,12 +40,12 @@ class IlluminateCommandBusAdapter implements CommandBus
     }
 
     /**
-     * @param $name
-     * @param $arguments
+     * @param string $name
+     * @param array  $arguments
      *
      * @return mixed
      */
-    public function __call($name, $arguments)
+    public function __call(string $name, array $arguments)
     {
         return call_user_func([$this->dispatcher, $name], $arguments[0]);
     }

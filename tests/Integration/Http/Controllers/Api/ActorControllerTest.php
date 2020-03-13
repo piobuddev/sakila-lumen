@@ -27,17 +27,17 @@ class ActorControllerTest extends BaseIntegrationTestCase
         $this->cut = new ActorController($commandBus);
     }
 
-    public function testRequestObjectIsReturnedWhenCallingShowActor()
+    public function testRequestObjectIsReturnedWhenCallingShowActor(): void
     {
         $this->assertInstanceOf(Response::class, $this->cut->show(self::ACTOR_ID));
     }
 
-    public function testResponseStatusCodeIs200()
+    public function testResponseStatusCodeIs200(): void
     {
         $this->assertEquals(200, $this->cut->show(self::ACTOR_ID)->getStatusCode());
     }
 
-    public function testReturnsAnActorForSpecifiedId()
+    public function testReturnsAnActorForSpecifiedId(): void
     {
         $actors = $this->add('actor', 10);
         $actor = $actors[5];
@@ -52,7 +52,7 @@ class ActorControllerTest extends BaseIntegrationTestCase
         $this->assertEquals($actor['last_name'], $content['lastName']);
     }
 
-    public function testThrowsHttpNotFoundExceptionWhenActorDoesNotExist()
+    public function testThrowsHttpNotFoundExceptionWhenActorDoesNotExist(): void
     {
         $this->expectExceptionMessage(NotFoundException::class);
         $this->expectExceptionMessage('Row (ID:999) not found in `actor` table');

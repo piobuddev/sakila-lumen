@@ -6,8 +6,8 @@ use Illuminate\Http\Response;
 
 class AbstractController
 {
-    protected const DEFAULT_PAGE      = 1;
-    protected const DEFAULT_PAGE_SIZE = 15;
+    protected const DEFAULT_PAGE      = '1';
+    protected const DEFAULT_PAGE_SIZE = '15';
 
     /**
      * @param mixed $data

@@ -59,7 +59,7 @@ class CategoryController extends AbstractController
      */
     public function store(Request $request): Response
     {
-        $category = $this->commandBus->execute(new AddCategoryRequest($request->post()));
+        $category = $this->commandBus->execute(new AddCategoryRequest((array)$request->post()));
 
         return $this->response($category, Response::HTTP_CREATED);
     }
@@ -72,7 +72,7 @@ class CategoryController extends AbstractController
      */
     public function update(int $categoryId, Request $request): Response
     {
-        $category = $this->commandBus->execute(new UpdateCategoryRequest($categoryId, $request->post()));
+        $category = $this->commandBus->execute(new UpdateCategoryRequest($categoryId, (array)$request->post()));
 
         return $this->response($category);
     }

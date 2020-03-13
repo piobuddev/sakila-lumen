@@ -59,7 +59,7 @@ class CountryController extends AbstractController
      */
     public function store(Request $request): Response
     {
-        $country = $this->commandBus->execute(new AddCountryRequest($request->post()));
+        $country = $this->commandBus->execute(new AddCountryRequest((array)$request->post()));
 
         return $this->response($country, Response::HTTP_CREATED);
     }
@@ -72,7 +72,7 @@ class CountryController extends AbstractController
      */
     public function update(int $countryId, Request $request): Response
     {
-        $country = $this->commandBus->execute(new UpdateCountryRequest($countryId, $request->post()));
+        $country = $this->commandBus->execute(new UpdateCountryRequest($countryId, (array)$request->post()));
 
         return $this->response($country);
     }

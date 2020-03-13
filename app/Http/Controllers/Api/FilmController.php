@@ -59,7 +59,7 @@ class FilmController extends AbstractController
      */
     public function store(Request $request): Response
     {
-        $film = $this->commandBus->execute(new AddFilmRequest($request->post()));
+        $film = $this->commandBus->execute(new AddFilmRequest((array)$request->post()));
 
         return $this->response($film, Response::HTTP_CREATED);
     }
@@ -72,7 +72,7 @@ class FilmController extends AbstractController
      */
     public function update(int $filmId, Request $request): Response
     {
-        $film = $this->commandBus->execute(new UpdateFilmRequest($filmId, $request->post()));
+        $film = $this->commandBus->execute(new UpdateFilmRequest($filmId, (array)$request->post()));
 
         return $this->response($film);
     }

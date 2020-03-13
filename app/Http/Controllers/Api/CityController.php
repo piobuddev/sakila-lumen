@@ -59,7 +59,7 @@ class CityController extends AbstractController
      */
     public function store(Request $request): Response
     {
-        $city = $this->commandBus->execute(new AddCityRequest($request->post()));
+        $city = $this->commandBus->execute(new AddCityRequest((array)$request->post()));
 
         return $this->response($city, Response::HTTP_CREATED);
     }
@@ -72,7 +72,7 @@ class CityController extends AbstractController
      */
     public function update(int $cityId, Request $request): Response
     {
-        $city = $this->commandBus->execute(new UpdateCityRequest($cityId, $request->post()));
+        $city = $this->commandBus->execute(new UpdateCityRequest($cityId, (array)$request->post()));
 
         return $this->response($city);
     }

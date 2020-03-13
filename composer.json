@@ -11,16 +11,12 @@
   "minimum-stability": "dev",
   "repositories": [
     {
-      "type": "path",
-      "url": "/code/sakila"
+      "type": "git",
+      "url": "https://github.com/piobuddev/sakila.git"
     },
     {
-      "type": "path",
-      "url": "/code/behat-webapi-extension"
-    },
-    {
-      "type": "path",
-      "url": "/code/repository-tester"
+      "type": "git",
+      "url": "https://github.com/piobuddev/behat-webapi-extension.git"
     },
     {
       "type": "git",
@@ -29,10 +25,11 @@
   ],
   "require": {
     "php": "^7.1",
-    "piobuddev/sakila": "*",
+    "piobuddev/sakila": "^1.0.0",
     "league/fractal": "^0.17.0",
     "laravel/lumen-framework": "5.5.*",
-    "vlucas/phpdotenv": "~2.2"
+    "vlucas/phpdotenv": "~2.2",
+    "ext-json": "*"
   },
   "autoload": {
     "psr-4": {
@@ -40,11 +37,12 @@
     }
   },
   "require-dev": {
-    "piobuddev/behat-webapi-extension": "*",
-    "phpstan/phpstan": "^0.8.5",
+    "piobuddev/behat-webapi-extension": "^1.0.0",
+    "phpstan/phpstan": "^0.12",
     "squizlabs/php_codesniffer": "*",
     "piobuddev/repository-tester": "^1.0",
-    "limedeck/phpunit-detailed-printer": "^3.1"
+    "limedeck/phpunit-detailed-printer": "^3.1",
+    "ext-pdo": "*"
   },
   "autoload-dev": {
     "psr-4": {

@@ -59,7 +59,7 @@ class InventoryController extends AbstractController
      */
     public function store(Request $request): Response
     {
-        $inventory = $this->commandBus->execute(new AddInventoryRequest($request->post()));
+        $inventory = $this->commandBus->execute(new AddInventoryRequest((array)$request->post()));
 
         return $this->response($inventory, Response::HTTP_CREATED);
     }
@@ -72,7 +72,7 @@ class InventoryController extends AbstractController
      */
     public function update(int $inventoryId, Request $request): Response
     {
-        $inventory = $this->commandBus->execute(new UpdateInventoryRequest($inventoryId, $request->post()));
+        $inventory = $this->commandBus->execute(new UpdateInventoryRequest($inventoryId, (array)$request->post()));
 
         return $this->response($inventory);
     }

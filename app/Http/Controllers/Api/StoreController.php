@@ -59,7 +59,7 @@ class StoreController extends AbstractController
      */
     public function store(Request $request): Response
     {
-        $store = $this->commandBus->execute(new AddStoreRequest($request->post()));
+        $store = $this->commandBus->execute(new AddStoreRequest((array)$request->post()));
 
         return $this->response($store, Response::HTTP_CREATED);
     }
@@ -72,7 +72,7 @@ class StoreController extends AbstractController
      */
     public function update(int $storeId, Request $request): Response
     {
-        $store = $this->commandBus->execute(new UpdateStoreRequest($storeId, $request->post()));
+        $store = $this->commandBus->execute(new UpdateStoreRequest($storeId, (array)$request->post()));
 
         return $this->response($store);
     }

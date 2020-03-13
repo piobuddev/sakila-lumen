@@ -59,7 +59,7 @@ class CustomerController extends AbstractController
      */
     public function store(Request $request): Response
     {
-        $customer = $this->commandBus->execute(new AddCustomerRequest($request->post()));
+        $customer = $this->commandBus->execute(new AddCustomerRequest((array)$request->post()));
 
         return $this->response($customer, Response::HTTP_CREATED);
     }
@@ -72,7 +72,7 @@ class CustomerController extends AbstractController
      */
     public function update(int $customerId, Request $request): Response
     {
-        $customer = $this->commandBus->execute(new UpdateCustomerRequest($customerId, $request->post()));
+        $customer = $this->commandBus->execute(new UpdateCustomerRequest($customerId, (array)$request->post()));
 
         return $this->response($customer);
     }
