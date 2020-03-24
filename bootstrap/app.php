@@ -4,7 +4,7 @@ use Laravel\Lumen\Routing\Router;
 use Sakila\Providers\CommandBusProvider;
 use Sakila\Providers\SwaggerProvider;
 use Sakila\Transformer\FractalTransformerAdapter;
-use Sakila\Transformer\Transformer;
+use Sakila\Transformer\TransformerInterface;
 
 require_once __DIR__.'/../vendor/autoload.php';
 
@@ -53,7 +53,7 @@ $app->singleton(
     Sakila\Console\Kernel::class
 );
 
-$app->singleton(Transformer::class, FractalTransformerAdapter::class);
+$app->singleton(TransformerInterface::class, FractalTransformerAdapter::class);
 
 /*
 |--------------------------------------------------------------------------

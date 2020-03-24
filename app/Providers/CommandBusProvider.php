@@ -3,7 +3,7 @@
 namespace Sakila\Providers;
 
 use Illuminate\Support\ServiceProvider;
-use Sakila\Command\Bus\CommandBus;
+use Sakila\Command\Bus\CommandBusInterface;
 use Sakila\Command\IlluminateCommandBusAdapter;
 use Sakila\Domain\Actor\Service\AddActorService;
 use Sakila\Domain\Actor\Service\RemoveActorService;
@@ -219,16 +219,15 @@ class CommandBusProvider extends ServiceProvider
         AddStoreRequest::class    => AddStoreService::class,
         UpdateStoreRequest::class => UpdateStoreService::class,
         RemoveStoreRequest::class => RemoveStoreService::class,
-
     ];
 
     public function boot(): void
     {
-        $this->app->make(CommandBus::class)->map($this->commandHandlersMap);
+        $this->app->make(CommandBusInterface::class)->map($this->commandHandlersMap);
     }
 
     public function register(): void
     {
-        $this->app->singleton(CommandBus::class, IlluminateCommandBusAdapter::class);
+        $this->app->singleton(CommandBusInterface::class, IlluminateCommandBusAdapter::class);
     }
 }

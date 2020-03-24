@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 
+
 namespace Sakila\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Sakila\Command\Bus\CommandBus;
+use Sakila\Command\Bus\CommandBusInterface;
 use Sakila\Domain\City\Service\Request\AddCityRequest;
 use Sakila\Domain\City\Service\Request\RemoveCityRequest;
 use Sakila\Domain\City\Service\Request\ShowCitiesRequest;
@@ -14,14 +15,14 @@ use Sakila\Domain\City\Service\Request\UpdateCityRequest;
 class CityController extends AbstractController
 {
     /**
-     * @var \Sakila\Command\Bus\CommandBus
+     * @var \Sakila\Command\Bus\CommandBusInterface
      */
     private $commandBus;
 
     /**
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param \Sakila\Command\Bus\CommandBusInterface $commandBus
      */
-    public function __construct(CommandBus $commandBus)
+    public function __construct(CommandBusInterface $commandBus)
     {
         $this->commandBus = $commandBus;
     }

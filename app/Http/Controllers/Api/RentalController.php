@@ -1,10 +1,11 @@
 <?php declare(strict_types=1);
 
+
 namespace Sakila\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
-use Sakila\Command\Bus\CommandBus;
+use Sakila\Command\Bus\CommandBusInterface;
 use Sakila\Domain\Rental\Service\Request\AddRentalRequest;
 use Sakila\Domain\Rental\Service\Request\RemoveRentalRequest;
 use Sakila\Domain\Rental\Service\Request\ShowRentalRequest;
@@ -14,14 +15,14 @@ use Sakila\Domain\Rental\Service\Request\UpdateRentalRequest;
 class RentalController extends AbstractController
 {
     /**
-     * @var \Sakila\Command\Bus\CommandBus
+     * @var \Sakila\Command\Bus\CommandBusInterface
      */
     private $commandBus;
 
     /**
-     * @param \Sakila\Command\Bus\CommandBus $commandBus
+     * @param \Sakila\Command\Bus\CommandBusInterface $commandBus
      */
-    public function __construct(CommandBus $commandBus)
+    public function __construct(CommandBusInterface $commandBus)
     {
         $this->commandBus = $commandBus;
     }

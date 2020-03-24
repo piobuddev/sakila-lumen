@@ -3,7 +3,7 @@
 namespace Sakila\Test\Http\Controllers\Api;
 
 use Illuminate\Http\Response;
-use Sakila\Command\Bus\CommandBus;
+use Sakila\Command\Bus\CommandBusInterface;
 use Sakila\Exceptions\Database\NotFoundException;
 use Sakila\Http\Controllers\Api\ActorController;
 use Sakila\Test\BaseIntegrationTestCase;
@@ -23,7 +23,7 @@ class ActorControllerTest extends BaseIntegrationTestCase
 
         $this->add('actor', 1, ['actor_id' => self::ACTOR_ID]);
 
-        $commandBus = $this->app->get(CommandBus::class);
+        $commandBus = $this->app->get(CommandBusInterface::class);
         $this->cut = new ActorController($commandBus);
     }
 

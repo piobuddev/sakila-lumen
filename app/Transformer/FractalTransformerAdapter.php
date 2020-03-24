@@ -11,7 +11,7 @@ use League\Fractal\Resource\Item;
 use League\Fractal\Serializer\ArraySerializer;
 use Sakila\Entity\EntityInterface;
 
-class FractalTransformerAdapter implements Transformer
+class FractalTransformerAdapter implements TransformerInterface
 {
     /**
      * @var \League\Fractal\Manager

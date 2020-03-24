@@ -2,7 +2,7 @@
 
 namespace Sakila\Validators;
 
-use Sakila\Domain\Actor\Validator\ActorValidator as ActorValidatorInterface;
+use Sakila\Domain\Actor\Validator\ActorValidatorInterface;
 
 class ActorValidator extends AbstractValidator implements ActorValidatorInterface
 {

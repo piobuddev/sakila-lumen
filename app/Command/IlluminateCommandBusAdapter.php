@@ -3,9 +3,9 @@
 namespace Sakila\Command;
 
 use Illuminate\Bus\Dispatcher;
-use Sakila\Command\Bus\CommandBus;
+use Sakila\Command\Bus\CommandBusInterface;
 
-class IlluminateCommandBusAdapter implements CommandBus
+class IlluminateCommandBusAdapter implements CommandBusInterface
 {
     /**
      * @var \Illuminate\Bus\Dispatcher
@@ -23,11 +23,11 @@ class IlluminateCommandBusAdapter implements CommandBus
     }
 
     /**
-     * @param \Sakila\Command\Command $command
+     * @param \Sakila\Command\CommandInterface $command
      *
      * @return mixed
      */
-    public function execute(Command $command)
+    public function execute(CommandInterface $command)
     {
         if ($handler = $this->dispatcher->getCommandHandler($command)) {
             $methodName = 'execute';
